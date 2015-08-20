@@ -1507,8 +1507,8 @@ class DataPHA(Data1DInt):
                 ylabel += '/keV'
             elif self.units == 'wavelength':
                 ylabel += '/Angstrom'
-            elif self.units == 'channel':
-                ylabel += '/channel'
+            # elif self.units == 'channel':
+                # ylabel += '/channel'
 
         if self.plot_fac:
             ylabel += ' X %s^%s' % (self.units.capitalize(), str(self.plot_fac))
