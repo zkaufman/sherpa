@@ -1,5 +1,5 @@
 # 
-#  Copyright (C) 2007,2014,2015  Smithsonian Astrophysical Observatory
+#  Copyright (C) 2007,2014,2015,2016  Smithsonian Astrophysical Observatory
 #
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -42,8 +42,9 @@ import sys
 
 __all__ = ('get_include', 'test')
 
-__versionstr__ = '4.7.1'
-__version__ = 40701
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
 
 
 class Formatter(logging.Formatter):
@@ -115,16 +116,26 @@ def test(level=1, verbosity=1, datadir=None):
 
 
 def clitest():
-    try:
-        import pytest, pytest_cov
-        errno = pytest.main(['--pyargs', 'sherpa', '-rs'])
-        sys.exit(errno)
-    except ImportError:
-        print """Cannot import pytest and pytest-cov.
-            Please run 'pip install -r test_requirements.txt' first"""
-        sys.exit(1)
+    def install(package_name):
+        try:
+            import pip
+            pip.main(['install', package_name])
+        except:
+            print """Cannot import pip or install packages with it.
+            You need pytest, and possibly pytest-cov, in order to run the tests.
+            If you downloaded the source code, please run 'pip install -r test_requirements.txt'
+            from the source directory first.
+            """
+            raise
 
+    def install_deps():
+        try:
+            import pytest
+        except ImportError:
+            install('pytest')
 
-from ._version import get_versions
-__version__ = get_versions()['version']
-del get_versions
+    install_deps()
+    import pytest
+
+    errno = pytest.main(['--pyargs', 'sherpa', '-rs'])
+    sys.exit(errno)

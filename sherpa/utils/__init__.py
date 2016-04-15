@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 #
 #  Copyright (C) 2007, 2015, 2016  Smithsonian Astrophysical Observatory
 #
@@ -32,7 +33,7 @@ import os
 import importlib
 import numpy
 import numpy.random
-import numpytest
+from . import numpytest
 import numpy.fft
 # Note: _utils.gsl_fcmp is not exported from this module; is this intentional?
 from unittest import skipIf
@@ -99,7 +100,7 @@ __all__ = ('NoNewAttributesAfterInit', 'SherpaTest', 'SherpaTestCase',
            'parse_expr', 'poisson_noise', 'print_fields', 'rebin',
            'sao_arange', 'sao_fcmp', 'set_origin', 'sum_intervals', 'zeroin',
            'multinormal_pdf', 'multit_pdf', 'get_error_estimates', 'quantile',
-           'TraceCalls','get_valid_args')
+           'get_valid_args')
 
 _guess_ampl_scale = 1.e+3
 
@@ -114,42 +115,6 @@ _guess_ampl_scale = 1.e+3
 SherpaInt = numpy.intp
 SherpaUInt = numpy.uintp
 SherpaFloat = numpy.float_
-
-###############################################################################
-
-
-class TraceCalls(object):
-    """ Use as a decorator on functions that should be traced. Several
-        functions can be decorated - they will all be indented according
-        to their call depth.
-    """
-    def __init__(self, stream=sys.stdout, indent_step=2, show_ret=False):
-        self.stream = stream
-        self.indent_step = indent_step
-        self.show_ret = show_ret
-
-        # This is a class attribute since we want to share the indentation
-        # level between different traced functions, in case they call
-        # each other.
-        TraceCalls.cur_indent = 0
-
-    def __call__(self, fn):
-        @wraps(fn)
-        def wrapper(*args, **kwargs):
-            indent = ' ' * TraceCalls.cur_indent
-            argstr = ', '.join(
-                [repr(a) for a in args] +
-                ["%s=%s" % (a, repr(b)) for a, b in kwargs.items()])
-            self.stream.write('%s%s(%s)\n' % (indent, fn.__name__, argstr))
-
-            TraceCalls.cur_indent += self.indent_step
-            ret = fn(*args, **kwargs)
-            TraceCalls.cur_indent -= self.indent_step
-
-            if self.show_ret:
-                self.stream.write('%s--> %s\n' % (indent, ret))
-            return ret
-        return wrapper
 
 ###############################################################################
 
@@ -285,6 +250,43 @@ class SherpaTestCase(numpytest.NumpyTestCase):
 
         self.assertTrue(numpy.all(sao_fcmp(first, second, tol)), msg)
 
+    # for running regression tests from sherpa-test-data
+    def run_thread(self, name, scriptname='fit.py'):
+        """Run a regression test from the sherpa-test-data submodule.
+
+        Parameters
+        ----------
+        name : string
+           The name of the science thread to run (e.g., pha_read,
+           radpro). The name should match the corresponding thread
+           name in the sherpa-test-data submodule. See examples below.
+        scriptname : string
+           The suffix of the test script file name, usually "fit.py."
+
+        Examples
+        --------
+        Regression test script file names have the structure
+        "name-scriptname.py." By default, scriptname is set to "fit.py."
+        For example, if one wants to run the regression test
+        "pha_read-fit.py," they would write
+
+        >>> run_thread("pha_read")
+
+        If the regression test name is "lev3fft-bar.py," they would do
+
+        >>> run_thread("lev3fft", scriptname="bar.py")
+
+        """
+
+        self.locals = {}
+        cwd = os.getcwd()
+        os.chdir(self.datadir)
+        scriptname = name + "-" + scriptname
+        try:
+            execfile(scriptname, {}, self.locals)
+        finally:
+            os.chdir(cwd)
+
 
 def requires_data(test_function):
     """
@@ -314,7 +316,8 @@ def requires_package(msg=None, *packages):
     Decorator for test functions requiring specific packages.
     """
     condition = _has_package_from_list(*packages)
-    msg = msg or "required module missing among {}.".format(", ".join(packages))
+    msg = msg or "required module missing among {}.".format(
+        ", ".join(packages))
 
     def decorator(test_function):
         return skipIf(not condition, msg)(test_function)
@@ -388,7 +391,7 @@ def erfinv(y):
 def filter_bins(mins, maxes, axislist):
     mask = None
 
-    for lo,hi,axis in izip(mins,maxes,axislist):
+    for lo, hi, axis in izip(mins, maxes, axislist):
 
         if (lo is None) and (hi is None):
             continue
@@ -623,7 +626,7 @@ def create_expr(vals, mask=None, format='%s', delim='-'):
                 expr.append(',')
             expr.append(format % vals[ii])
             expr.append(',')
-    if len(expr) and expr[-1] in (',',delim):
+    if len(expr) and expr[-1] in (',', delim):
         expr.append(format % vals[-1])
 
     return ''.join(expr)
@@ -751,8 +754,8 @@ def get_error_estimates(x, sorted=False):
 
     sigfrac = 0.682689
     median = quantile(xs, 0.5)
-    lval   = quantile(xs, (1 - sigfrac) / 2.0)
-    hval   = quantile(xs, (1 + sigfrac) / 2.0)
+    lval = quantile(xs, (1 - sigfrac) / 2.0)
+    hval = quantile(xs, (1 + sigfrac) / 2.0)
 
     return (median, lval, hval)
 
@@ -837,10 +840,10 @@ def multinormal_pdf(x, mu, sigma):
         raise ValueError("sigma is not positive definite")
     if numpy.max(numpy.abs(sigma - sigma.T)) >= 1.e-9:
         raise ValueError("sigma is not symmetric")
-    rank     = mu.size
-    coeff    = 1.0 / (numpy.power(2.0 * numpy.pi, rank / 2.0) *
-                      numpy.sqrt(numpy.abs(numpy.linalg.det(sigma))))
-    xmu      = numpy.mat(x - mu)
+    rank = mu.size
+    coeff = 1.0 / (numpy.power(2.0 * numpy.pi, rank / 2.0) *
+                   numpy.sqrt(numpy.abs(numpy.linalg.det(sigma))))
+    xmu = numpy.mat(x - mu)
     invsigma = numpy.mat(numpy.linalg.inv(sigma))
 
     # The matrix multiplication looks backwards, but mu and x
@@ -892,13 +895,13 @@ def multit_pdf(x, mu, sigma, dof):
     if numpy.max(numpy.abs(sigma - sigma.T)) >= 1.e-9:
         raise ValueError("sigma is not symmetric")
 
-    rank     = mu.size
-    np       = float(n + rank)
-    coeff    = (gamma(np / 2.0) /
-                (gamma(n / 2.0) * numpy.power(n, rank / 2.0) *
+    rank = mu.size
+    np = float(n + rank)
+    coeff = (gamma(np / 2.0) /
+             (gamma(n / 2.0) * numpy.power(n, rank / 2.0) *
                  numpy.power(numpy.pi, rank / 2.0) *
                  numpy.sqrt(numpy.abs(numpy.linalg.det(sigma)))))
-    xmu      = numpy.mat(x - mu)
+    xmu = numpy.mat(x - mu)
     invsigma = numpy.mat(numpy.linalg.inv(sigma))
 
     # The matrix multiplication looks backwards, but mu and x
@@ -952,14 +955,16 @@ def dataspace1d(start, stop, step=1, numbins=None):
             raise TypeError("input should be step > 0, found step=%s" % step)
 
         if step >= (stop - start):
-            raise TypeError("input has produced less than 2 bins, found start=%s stop=%s step=%s" % (start, stop, step))
+            raise TypeError(
+                "input has produced less than 2 bins, found start=%s stop=%s step=%s" % (start, stop, step))
 
     # xx = numpy.arange(start, stop, step, dtype=float)
     # xx = sao_arange(start, stop, step)
     xx = None
     if numbins is not None:
         if numbins <= 1:
-            raise TypeError("input should be numbins > 1, found numbins=%s" % numbins)
+            raise TypeError(
+                "input should be numbins > 1, found numbins=%s" % numbins)
 
         xx = numpy.linspace(start, stop, numbins + 1)
     else:
@@ -1350,7 +1355,7 @@ def get_amplitude_position(arr, mean=False):
         xmin = amax / _guess_ampl_scale
         xval = amax
 
-    elif((amax > 0.0 and amin < 0.0 and abs(amin) > amax ) or
+    elif((amax > 0.0 and amin < 0.0 and abs(amin) > amax) or
          (amax == 0.0 and amin < 0.0) or (amax < 0.0)):
         xpos = arr.argmin()
         if mean:
@@ -1461,8 +1466,10 @@ def guess_reference(pmin, pmax, x, xhi=None):
     xmin = x.min()
     xmax = x.max()
 
-    if xmin >= 1: pmin = 1
-    if xmax <= 1: pmax = 1
+    if xmin >= 1:
+        pmin = 1
+    if xmax <= 1:
+        pmax = 1
 
     val = 0.0
     if xmin < 1.0 and xmax > 1.0:
@@ -1632,7 +1639,7 @@ def run_tasks(procs, err_q, out_q, num):
     # return list(numpy.concatenate(results))
     # Remove extra dimension added by split
     vals = []
-    [ vals.extend(result) for result in results ]
+    [vals.extend(result) for result in results]
     return vals
 
 
@@ -1675,7 +1682,7 @@ def parallel_map(function, sequence, numcores=None):
     # each slave process has access to.  Bottom line -- thread-safe.
     out_q = manager.Queue()
     err_q = manager.Queue()
-    lock  = manager.Lock()
+    lock = manager.Lock()
 
     # if sequence is less than numcores, only use len sequence number of
     # processes
@@ -1686,8 +1693,8 @@ def parallel_map(function, sequence, numcores=None):
     sequence = split_array(sequence, numcores)
 
     procs = [multiprocessing.Process(target=worker,
-                     args=(function, ii, chunk, out_q, err_q, lock))
-                 for ii, chunk in enumerate(sequence)]
+                                     args=(function, ii, chunk, out_q, err_q, lock))
+             for ii, chunk in enumerate(sequence)]
 
     return run_tasks(procs, err_q, out_q, numcores)
 
@@ -1780,17 +1787,18 @@ class NumDerivFowardPartial(NumDeriv):
             deltai = h
         ei[ith] = deltai
 
-        deltaj = h * abs( x[ jth ] )
+        deltaj = h * abs(x[jth])
         if 0.0 == deltaj:
             deltaj = h
-        ej[ jth ] = deltaj
+        ej[jth] = deltaj
 
-        fval  = self.fval_0
+        fval = self.fval_0
         fval += self.func(x + ei + ej)
         fval -= self.func(x + ei)
         fval -= self.func(x + ej)
         fval /= deltai * deltaj
         return fval
+
 
 class NumDerivCentralPartial(NumDeriv):
     """Add the following Taylor series expansion::
@@ -1864,7 +1872,7 @@ class NumDerivCentralPartial(NumDeriv):
                 deltaj = h
             ej[jth] = deltaj
 
-            fval  = self.func(x + ei + ej)
+            fval = self.func(x + ei + ej)
             fval -= self.func(x + ei - ej)
             fval -= self.func(x - ei + ej)
             fval += self.func(x - ei - ej)
@@ -1902,7 +1910,7 @@ class RichardsonExtrapolation(NoRichardsonExtrapolation):
 
     def __call__(self, x, t, tol, maxiter, h, *args):
 
-        richardson = numpy.zeros((maxiter,maxiter), dtype=numpy.float_)
+        richardson = numpy.zeros((maxiter, maxiter), dtype=numpy.float_)
         richardson[0, 0] = self.sequence(x, h, *args)
 
         t_sqr = t * t
@@ -1916,7 +1924,7 @@ class RichardsonExtrapolation(NoRichardsonExtrapolation):
                 factor = pow(t_sqr, jj)
                 factor_1 = factor - 1
                 richardson[ii, jj] = (factor * richardson[ii, jj_1] -
-                                      richardson[ii_1, jj_1] ) / factor_1
+                                      richardson[ii_1, jj_1]) / factor_1
                 arg_jj = richardson[ii, jj]
                 arg_jj -= richardson[ii, jj_1]
                 arg_ii = richardson[ii, jj]
@@ -2009,7 +2017,7 @@ def is_in(arg, seq):
 
 def is_iterable(arg):
     return isinstance(arg, list) or isinstance(arg, tuple) \
-           or isinstance(arg, numpy.ndarray) or numpy.iterable(arg)
+        or isinstance(arg, numpy.ndarray) or numpy.iterable(arg)
 
 
 def is_sequence(start, mid, end):
@@ -2227,7 +2235,7 @@ def bisection(fcn, xa, xb, fa=None, fb=None, args=(), maxfev=48, tol=1.0e-6):
                 if abs(xa - xb) < min(tol * abs(xb), tol / 10.0):
                     return [[xc, fc], [[xa, fa], [xb, fb]], nfev[0]]
 
-                if mysgn(fa) !=  mysgn(fc):
+                if mysgn(fa) != mysgn(fc):
                     xb, fb = xc, fc
                 else:
                     xa, fa = xc, fc
@@ -2237,7 +2245,6 @@ def bisection(fcn, xa, xb, fa=None, fb=None, args=(), maxfev=48, tol=1.0e-6):
                     return [[xa, fa], [[xa, fa], [xb, fb]], nfev[0]]
                 else:
                     return [[xb, fb], [[xa, fa], [xb, fb]], nfev[0]]
-
 
         xc = (xa + xb) / 2.0
         fc = myfcn(xc, *args)
@@ -2550,6 +2557,8 @@ def new_muller(fcn, xa, xb, fa=None, fb=None, args=(), maxfev=32, tol=1.e-6):
 #  * limitations under the License.
 #  */
 #
+
+
 def apache_muller(fcn, xa, xb, fa=None, fb=None, args=(), maxfev=32,
                   tol=1.0e-6):
 
@@ -2810,6 +2819,22 @@ def zeroin(fcn, xa, xb, fa=None, fb=None, args=(), maxfev=32, tol=1.0e-2):
 
 def get_valid_args(func):
     valid_args = func.func_code.co_varnames[:func.func_code.co_argcount]
-    kwargs_length = len(func.func_defaults)  # number of keyword arguments
-    valid_kwargs = valid_args[-kwargs_length:]  # because kwargs are last
+    # number of keyword arguments
+    kwargs_length = len(func.func_defaults) if func.func_defaults else 0
+    # because kwargs are last
+    valid_kwargs = valid_args[-kwargs_length:] if kwargs_length else []
     return valid_kwargs
+
+
+def public(f):
+    """Use a decorator to avoid retyping function/class names.
+
+    * Based on an idea by Duncan Booth:
+    http://groups.google.com/group/comp.lang.python/msg/11cbb03e09611b8a
+    * Improved via a suggestion by Dave Angel:
+    http://groups.google.com/group/comp.lang.python/msg/3d400fb22d8a42e1
+    """
+    _all = sys.modules[f.__module__].__dict__.setdefault('__all__', [])
+    if f.__name__ not in _all:  # Prevent duplicates if run from an IDE.
+        _all.append(f.__name__)
+    return f

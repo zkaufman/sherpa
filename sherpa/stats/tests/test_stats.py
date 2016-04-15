@@ -20,17 +20,19 @@
 import os.path
 
 import numpy
-import unittest
 
-from sherpa.utils import SherpaTest, SherpaTestCase
 from sherpa.utils import requires_data, requires_xspec, requires_fits
+from sherpa.utils import SherpaTest, SherpaTestCase
+from sherpa.data import Data1D
 
 from sherpa.models import PowLaw1D
 from sherpa.fit import Fit
-from sherpa.stats import Stat, Cash, LeastSq, UserStat, WStat
+from sherpa.stats import Cash, UserStat, WStat
 from sherpa.optmethods import LevMar, NelderMead
 from sherpa.utils.err import StatErr
 from sherpa.astro import ui
+import logging
+logger = logging.getLogger("sherpa")
 
 
 class MyCashWithBkg(UserStat):
@@ -186,22 +188,25 @@ class test_stats(SherpaTestCase):
             [5864.278543739505, 1.6569575154646112, 29868.225197035885])}
 
     def setUp(self):
-        try:
-            from sherpa.astro.xspec import XSphabs, XSpowerlaw
-            from sherpa.astro.io import read_pha
-        except:
-            return
+        self._old_logger_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+        from sherpa.astro.xspec import XSphabs
+        from sherpa.astro.io import read_pha
 
-        pha_fname = self.make_path("stats/9774.pi")
+        pha_fname = self.make_path("9774.pi")
         self.data = read_pha(pha_fname)
         self.data.notice(0.5, 7.0)
 
-        bkg_fname = self.make_path("stats/9774_bg.pi")
+        bkg_fname = self.make_path("9774_bg.pi")
         self.bkg = read_pha(bkg_fname)
 
         abs1 = XSphabs('abs1')
         p1 = PowLaw1D('p1')
         self.model = abs1 + p1
+
+    def tearDown(self):
+        if hasattr(self, "_old_logger_level"):
+            logger.setLevel(self._old_logger_level)
 
     def compare_results(self, arg1, arg2):
 
@@ -296,6 +301,14 @@ class test_stats(SherpaTestCase):
         data.notice(0.5, 7.0)
         fit = Fit(data, self.model, WStat(), NelderMead())
         self.assertRaises(StatErr, fit.fit)
+
+    def test_chi2datavar(self):
+        num = 3
+        xy = numpy.array(range(num))
+        ui.load_arrays(1, xy, xy, Data1D)
+        ui.set_stat('chi2datavar')
+        err = ui.get_staterror()
+        numpy.testing.assert_allclose(err, numpy.sqrt(xy), rtol=1e-7, atol=1e-7)
 
 
 def tstme(datadir=None):

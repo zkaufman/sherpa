@@ -24,6 +24,7 @@ from itertools import izip
 import logging
 import sys
 import os
+import inspect
 import numpy
 import sherpa.all
 from sherpa.utils import SherpaFloat, NoNewAttributesAfterInit, export_method
@@ -87,7 +88,7 @@ def _fix_array(arg, argname, ndims=1):
 
 
 def _is_subclass(t1, t2):
-    return isinstance(t1, type) and issubclass(t1, t2) and (t1 is not t2)
+    return inspect.isclass(t1) and issubclass(t1, t2) and (t1 is not t2)
 
 
 def _send_to_pager(all, filename=None, clobber=False):
@@ -281,7 +282,7 @@ class Session(NoNewAttributesAfterInit):
 
         """
         self._sherpa_version = sherpa.__version__
-        self._sherpa_version_string = sherpa.__versionstr__
+        self._sherpa_version_string = sherpa.__version__
 
         self._default_id = 1
         self._paramprompt = False
@@ -5263,6 +5264,10 @@ class Session(NoNewAttributesAfterInit):
            name that can be used to inspect and change the model
            parameters, as well as use it in model expressions.
 
+        Returns
+        -------
+        model : the sherpa.models.Model object created
+
         See Also
         --------
         delete_model_component : Delete a model component.
@@ -5299,22 +5304,19 @@ class Session(NoNewAttributesAfterInit):
         # just return (i.e., create_model_component(const1d.c1)
         # is redundant, so just return)
         if isinstance(typename, sherpa.models.Model) and name is None:
-            return
+            return typename
 
         _check_type(typename, basestring, 'typename', 'a string')
         _check_type(name, basestring, 'name', 'a string')
 
-        if typename is None:
-            raise ArgumentErr('notype')
-        if name is None:
-            raise ArgumentErr('noname')
         typename = typename.lower()
         cls = self._model_types.get(typename)
         if cls is None:
             raise ArgumentErr('badtype', typename)
 
-        self._model_components[name] = cls(name)
-        # self._add_model_component(cls(name))
+        model = cls(name)
+        self._model_components[name] = model
+        return model
 
     def reset(self, model=None, id=None):
         """Reset the model parameters to their default settings.
@@ -6358,7 +6360,7 @@ class Session(NoNewAttributesAfterInit):
         is applied - via ``set_source`` - must have the same number
         of data points as the model.
 
-        When used with an integrated data set (for example
+        When used with an integrated data set (for example,
         `Data1DInt`), then the first column of the table - the
         independent axis - should be the left-edge of the bin,
         and the second column is the integrated value for that
@@ -9968,16 +9970,15 @@ class Session(NoNewAttributesAfterInit):
         return self._pyblocxs.list_samplers()
 
     # DOC-TODO: add pointers on what to do with the return values
-    def get_draws(self, id=None, otherids=(), niter=1000):
+    def get_draws(self, id=None, otherids=(), niter=1000, covar_matrix=None):
         """Run the pyBLoCXS MCMC algorithm.
 
         The function runs a Markov Chain Monte Carlo (MCMC) algorithm
         designed to carry out Bayesian Low-Count X-ray Spectral
-        (BLoCXS) analysis. Unlike many MCMC algorithms, it is
-        designed to explore the parameter space at the suspected
-        statistic minimum (i.e.  after using `fit`). The return
-        values include the statistic value, parameter values, and a
-        flag indicating whether the row represents a jump from the
+        (BLoCXS) analysis. It explores the model parameter space at
+        the suspected statistic minimum (i.e.  after using `fit`). The return
+        values include the statistic value, parameter values, and an
+        acceptance flag indicating whether the row represents a jump from the
         current location or not. For more information see the
         `sherpa.sim` module and [1]_.
 
@@ -9991,6 +9992,9 @@ class Session(NoNewAttributesAfterInit):
            Other data sets to use in the calculation.
         niter : int, optional
            The number of draws to use. The default is ``1000``.
+        covar_matrix : 2D array, optional
+           The covariance matrix to use. If ``None`` then the
+           result from `get_covar_results().extra_output` is used.
 
         Returns
         -------
@@ -10018,6 +10022,7 @@ class Session(NoNewAttributesAfterInit):
         plot_trace : Create a trace plot of row number versus value.
         set_prior : Set the prior function to use with a parameter.
         set_sampler : Set the MCMC sampler.
+        get_sampler : Return information about the current MCMC sampler.
 
         Notes
         -----
@@ -10073,11 +10078,12 @@ class Session(NoNewAttributesAfterInit):
         # if fit_results is None:
         #    raise TypeError("Fit has not been run")
 
-        covar_results = self.get_covar_results()
-        if covar_results is None:
-            raise TypeError("Covariance has not been calculated")
+        if covar_matrix is None:
+            covar_results = self.get_covar_results()
+            if covar_results is None:
+                raise TypeError("Covariance has not been calculated")
 
-        covar_matrix = covar_results.extra_output
+            covar_matrix = covar_results.extra_output
 
         stats, accept, params = self._pyblocxs.get_draws(
             fit, covar_matrix, niter=niter)

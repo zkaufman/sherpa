@@ -2,6 +2,7 @@
 
 # C extensions
 *.so
+*.so.dSYM
 
 # Build outputs
 *.o
@@ -59,6 +60,7 @@ pip-log.txt
 .tox
 nosetests.xml
 .cache
+coverage.xml
 
 # Translations
 *.mo
@@ -70,6 +72,9 @@ nosetests.xml
 .spyderproject
 /.settings
 .idea
+
+# Sonar
+sonar-project.properties
 
 # Autotools
 **/autom4te.cache

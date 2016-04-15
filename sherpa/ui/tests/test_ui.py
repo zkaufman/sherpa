@@ -25,11 +25,16 @@ from sherpa.utils import linear_interp, nearest_interp, neville
 from sherpa.utils.err import IdentifierErr, IOErr, ModelErr
 from sherpa.models import ArithmeticModel, Parameter
 from sherpa.models.basic import TableModel
+from sherpa.models.basic import PowLaw1D
+from sherpa.utils.err import StatErr, SessionErr
 from sherpa import ui
 
 import numpy as np
+import numpy
 from numpy.testing import assert_allclose
 
+import logging
+logger = logging.getLogger("sherpa")
 
 class UserModel(ArithmeticModel):
 
@@ -45,16 +50,127 @@ class UserModel(ArithmeticModel):
 
 
 @requires_data
+class test_get_draws(SherpaTestCase):
+    """
+    Tests for PR #155
+
+    TODO: Some test cases would be more readable if using pytest to parameterize a test case
+    TODO: Some test cases cannot be implemented (easily) without mock
+    In particular one cannot test that the correct matrix is used when one is not
+    provided and that an error is thrown when, for any reason, the computed covariance matrix
+    is None.
+    """
+
+    def setUp(self):
+        self._old_logger_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+        ui.clean()
+
+        self.ascii = self.make_path('sim.poisson.1.dat')
+
+        self.wrong_stat_msg = "Fit statistic must be cash, cstat or wstat, not {}"
+        self.wstat_err_msg = "No background data has been supplied. Use cstat"
+        self.no_covar_msg = "covariance has not been performed"
+        self.fail_msg = "Call should not have succeeded"
+        self.right_stats = {'cash', 'cstat', 'wstat'}
+        self.model = PowLaw1D("p1")
+
+        ui.load_data(self.ascii)
+        ui.set_model(self.model)
+
+    def tearDown(self):
+        if hasattr(self, '_old_logger_level'):
+            logger.setLevel(self._old_logger_level)
+        ui.clean()
+
+    # Test an exception is thrown is the proper stat is not set
+    def test_covar_wrong_stat(self):
+        ui.covar()
+        fail = False
+        wrong_stats = set(ui.list_stats()) - self.right_stats
+        for stat in wrong_stats:
+            ui.set_stat(stat)
+            try:
+                ui.get_draws()
+            except ValueError as ve:
+                self.assertEqual(self.wrong_stat_msg.format(stat), ve.message)
+                continue
+            fail = True
+            break
+        if fail:
+            self.fail(self.fail_msg)
+
+    # Test an exception is thrown when wstat is used without background
+    def test_covar_wstat_no_background(self):
+        ui.covar()
+        ui.set_stat("wstat")
+        try:
+            ui.get_draws()
+        except StatErr as ve:
+            self.assertEqual(self.wstat_err_msg, ve.message)
+            return
+        self.fail(self.fail_msg)
+
+    # Test an exception is thrown if covar is not run
+    def test_no_covar(self):
+        for stat in self.right_stats:
+            ui.set_stat(stat)
+            try:
+                ui.get_draws()
+            except SessionErr as ve:
+                self.assertEqual(self.no_covar_msg, ve.message)
+                return
+        self.fail(self.fail_msg)
+
+    # Test get_draws returns a valid response when the covariance matrix is provided
+    # Note the accuracy of the returned values is not assessed here
+    def test_covar_as_argument(self):
+        for stat in self.right_stats - {'wstat'}:
+            ui.set_stat(stat)
+            ui.fit()
+            matrix = [[0.00064075,  0.01122127], [0.01122127,  0.20153251]]
+            niter = 10
+            stat, accept, params = ui.get_draws(niter=niter, covar_matrix=matrix)
+            self.assertEqual(niter+1, stat.size)
+            self.assertEqual(niter+1, accept.size)
+            self.assertEqual((2, niter+1), params.shape)
+            self.assertTrue(numpy.any(accept))
+
+    # Test get_draws returns a valid response when the covariance matrix is not provided
+    # Note the accuracy of the returned values is not assessed here
+    def test_covar_as_none(self):
+        for stat in self.right_stats - {'wstat'}:
+            ui.set_stat(stat)
+            ui.fit()
+            ui.covar()
+            niter = 10
+            stat, accept, params = ui.get_draws(niter=niter)
+            self.assertEqual(niter+1, stat.size)
+            self.assertEqual(niter+1, accept.size)
+            self.assertEqual((2, niter+1), params.shape)
+            self.assertTrue(numpy.any(accept))
+
+
+@requires_data
 class test_ui(SherpaTestCase):
 
     def setUp(self):
-        self.ascii = self.make_path('threads/ascii_table/sim.poisson.1.dat')
+        ui.clean()
+        self._old_logger_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+        self.ascii = self.make_path('sim.poisson.1.dat')
         self.single = self.make_path('single.dat')
         self.double = self.make_path('double.dat')
         self.filter = self.make_path('filter_single_integer.dat')
         self.func = lambda x: x
 
         ui.dataspace1d(1, 1000, dstype=ui.Data1D)
+
+    def tearDown(self):
+        if hasattr(self, '_old_logger_level'):
+            logger.setLevel(self._old_logger_level)
+        ui.clean()
 
     def test_ascii(self):
         ui.load_data(1, self.ascii)
@@ -421,13 +537,13 @@ class test_psf_ui(SherpaTestCase):
     models1d = ['gauss1d', 'delta1d', 'normgauss1d']
     models2d = ['gauss2d', 'delta2d', 'normgauss2d']
 
-    # Commented out setUp/tearDown as they do nothing
-    #
-    # def setUp(self):
-    #     pass
+    def setUp(self):
+        self._old_logger_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
 
     def tearDown(self):
-        ui.clean()
+        if hasattr(self, '_old_logger_level'):
+            logger.setLevel(self._old_logger_level)
 
     def test_psf_model1d(self):
         ui.dataspace1d(1, 10)
