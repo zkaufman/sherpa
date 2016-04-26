@@ -52,7 +52,11 @@ extensions = [
     'numpydoc.numpydoc'
 ]
 
-ipython_savefig_dir = '_generated'
+# It looks like something has changed, so that it is easier (for now)
+# to use the default location for images (html_static_path) than
+# set one.
+#
+#ipython_savefig_dir = ['_generated']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
