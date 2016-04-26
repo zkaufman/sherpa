@@ -14,21 +14,20 @@
 
 import sys
 import os
-import shlex
+# import shlex
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+# sys.path.insert(0, os.path.abspath('.'))
 
 import sherpa
 
-# I assume that __versionstr__ is 4.7.1 and __version__ is
-# '4.7+495.g7f83fb7' (at least, outside releases).
+# For now include the '+...' part of the version string
+# and that I can drop the '+...' part.
 #
-sherpa_version_elements = sherpa.__versionstr__.split('.')
-sherpa_version = '.'.join(sherpa_version_elements[:-1])
-sherpa_release = sherpa.__version__
+sherpa_release = sherpa._version.version_version
+sherpa_version = sherpa_release[:sherpa_release.find('+')]
 
 # For sherpaext
 sys.path.insert(0, os.path.abspath('.'))
@@ -36,7 +35,7 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-#needs_sphinx = '1.0'
+# needs_sphinx = '1.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -71,7 +70,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Sherpa'
-copyright = u'2015, Chandra X-ray Center, Smithsonian Astrophysical Observatory'
+copyright = u'2016, Chandra X-ray Center, Smithsonian Astrophysical Observatory'
 author = u'Chandra X-ray Center, Smithsonian Astrophysical Observatory'
 
 # The version info for the project you're documenting, acts as replacement for
