@@ -26,7 +26,7 @@ import sherpa
 # For now include the '+...' part of the version string
 # and that I can drop the '+...' part.
 #
-sherpa_release = sherpa._version.version_version
+sherpa_release = sherpa._version.get_versions()['version']
 sherpa_version = sherpa_release[:sherpa_release.find('+')]
 
 # For sherpaext
