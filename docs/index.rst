@@ -36,7 +36,8 @@ tasks (such as X-ray Astronomy).
    :maxdepth: 2
    :caption: User Documentation
 
-   example
+   quick
+   intro-models
 
 .. _help_docs::
 

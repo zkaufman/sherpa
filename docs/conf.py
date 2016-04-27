@@ -32,6 +32,10 @@ sherpa_version = sherpa_release[:sherpa_release.find('+')]
 # For sherpaext
 sys.path.insert(0, os.path.abspath('.'))
 
+# For run-time code used in the documentation
+#   TODO: is there a better way to do this?
+sys.path.insert(0, os.path.join(os.path.abspath('.'), 'code'))
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -133,11 +137,7 @@ todo_include_todos = False
 
 # Define standard header/footers.
 
-rst_prolog = """
-
-.. |sherparc| replace:: ``.sherpa-standalone.rc``
-
-"""
+rst_prolog = ""
 
 rst_epilog = """
 
