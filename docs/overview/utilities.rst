@@ -20,6 +20,36 @@ sherpa.utils Package
     :undoc-members:
     :show-inheritance:
 
+sherpa.utils.err Package
+++++++++++++++++++++++++
+
+.. automodule:: sherpa.utils.err
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+sherpa.utils.integration Package
+++++++++++++++++++++++++++++++++
+
+.. automodule:: sherpa.utils.integration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+sherpa.utils.logger Package
++++++++++++++++++++++++++++
+
+#.. automodule:: sherpa.utils.logger
+#    :members:
+#    :undoc-members:
+#    :show-inheritance:
+
+.. note::
+   There are problems importing ``sherpa.utils.logger``
+   
+sherpa.astro.utils Package
+++++++++++++++++++++++++++
+
 .. automodule:: sherpa.astro.utils
     :members:
     :undoc-members:

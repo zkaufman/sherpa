@@ -37,9 +37,9 @@ tasks (such as X-ray Astronomy).
 
    quick
    data/index
+   models/index
    statistics/index
    optimisers/index
-   models/index
    fit/index
    overview/error_analysis
    overview/utilities

@@ -21,11 +21,11 @@ The basic process, which will be followed below, is:
 
 * create a data object
 
+* define the model
+
 * select the statistics
 
 * select the optimisation routine
-
-* define the model
 
 * fit the data
 
@@ -33,7 +33,8 @@ The basic process, which will be followed below, is:
 
 Although presented as a list, it is not necessarily a linear process,
 in that the order can be different to that above, and various steps
-can be repeated.
+can be repeated. It also does not include any visualization steps
+needed to inform and validate any choices.
 
 .. _quick-gauss1d:
 
@@ -82,6 +83,24 @@ data sets are loaded, but has no influence on the results):
 At this point no errors are being used in the fit, so the ``staterror``
 and ``syserror`` fields are empty.
 
+Define the model
+----------------
+
+In this example a single model is used - a one-dimensional
+gaussian - but more complex examples are possible: these
+include multiple components, sharing models between data sets,
+and adding user-defined models. A full description of
+the model language and capabilities is provided in
+:doc:`models/index`.
+
+.. ipython::
+
+    In [1]: from sherpa.models import Gauss1D
+
+    In [2]: g = Gauss1D()
+
+    In [3]: print(g)
+
 Select the statistics
 ---------------------
 
@@ -103,24 +122,6 @@ Select the optimisation routine
     In [2]: opt = LevMar()
 
     In [3]: print(opt)
-
-Define the model
-----------------
-
-In this example a single model is used - a one-dimensional
-gaussian - but more complex examples are possible: these
-include multiple components, sharing models between data sets,
-and adding user-defined models. A full description of
-the model language and capabilities is provided in
-:doc:`models/index`.
-
-.. ipython::
-
-    In [1]: from sherpa.models import Gauss1D
-
-    In [2]: g = Gauss1D()
-
-    In [3]: print(g)
 
 Fit the data
 ------------
