@@ -36,11 +36,11 @@ tasks (such as X-ray Astronomy).
    :name: user_docs
 
    quick
-   overview/data
-   overview/stats
-   overview/optimisers
-   overview/models
-   overview/fit
+   data/index
+   statistics/index
+   optimisers/index
+   models/index
+   fit/index
    overview/error_analysis
    overview/utilities
    overview/ciao

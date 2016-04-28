@@ -1,4 +1,3 @@
-
 ***********************************************
 A quick guide to modeling and fitting in Sherpa
 ***********************************************
@@ -35,6 +34,8 @@ The basic process, which will be followed below, is:
 Although presented as a list, it is not necessarily a linear process,
 in that the order can be different to that above, and various steps
 can be repeated.
+
+.. _quick-gauss1d:
 
 Fitting a one-dimensional data set
 ==================================
@@ -106,6 +107,13 @@ Select the optimisation routine
 Define the model
 ----------------
 
+In this example a single model is used - a one-dimensional
+gaussian - but more complex examples are possible: these
+include multiple components, sharing models between data sets,
+and adding user-defined models. A full description of
+the model language and capabilities is provided in
+:doc:`models/index`.
+
 .. ipython::
 
     In [1]: from sherpa.models import Gauss1D
@@ -129,11 +137,13 @@ Fit the data
 
     In [5]: if not gres.succeeded: print(gres.message)
 
-    In [6]: plt.plot(d.x, d.y, 'ko');
+    In [6]: plt.plot(d.x, d.y, 'ko', label='Data');
+
+    In [7]: plt.plot(d.x, g(d.x), linewidth=2, label='Gaussian');
 
     @savefig data1d_gauss_fit.png width=8in
-    In [7]: plt.plot(d.x, g(d.x), linewidth=2);
-
+    In [8]: plt.legend(loc=2);
+    
 Extract the parameter values
 ----------------------------
 
@@ -157,7 +167,7 @@ value used to create the data: :math:`\rm{FWHM} = 2 \sqrt{2ln(2)} \sigma`.
 
     In [6]: print("Sigma    ={:.2f}  truth={:.2f}".format(ans['gauss1d.fwhm']/conv, sigma_true))
 
-The model, and its parameter valuesm can also be queried directly, as they
+The model, and its parameter values, can also be queried directly, as they
 have been changed by the fit:
 
 .. ipython::
@@ -166,58 +176,21 @@ have been changed by the fit:
 
     In [2]: print(g.pos)
 
-Writing your own model
-======================
-
-A model class can be created to fit any function, or interface with
-external code. An example is the AstroPy trapezoidal model, which has
-four parameters: the amplitude of the central region, the center
-and width of this region, and the slope. The following model class,
-which was not written for efficiancy or robustness, implements this
-interface:
-
-.. literalinclude:: code/trap.py
-
-This can be used in the same manner as the ``Gauss1D`` model
-above:
-
-.. ipython::
-
-    In [1]: from trap import Trap1D
-
-    In [2]: t = Trap1D()
-
-    In [3]: print(t)
-
-    In [4]: tfit = Fit(d, t, stat=stat, method=opt)
-
-    In [5]: tres = tfit.fit()
-
-    In [6]: if not tres.succeeded: print(tres.message)
-
-    In [7]: plt.plot(d.x, d.y, 'ko');
-
-    In [8]: plt.plot(d.x, g(d.x), linewidth=2, label='Gaussian');
-
-    In [9]: plt.plot(d.x, t(d.x), linewidth=2, label='Trapezoid');
-
-    @savefig data1d_gauss_trap_fit.png width=8in
-    In [10]: plt.legend(loc=2);
-
 Combining models
 ================
 
 .. note::
 
     Need to write this up; can base it on the AstroPy example for
-    composite models.
+    composite models. Also move to the models section.
 
 Linking parameter values
 ========================
 
 .. note::
 
-   Need to come up with an example where it's easy to do
+   Need to come up with an example where it's easy to do. And move
+   to the models section.
     
 Including errors
 ================

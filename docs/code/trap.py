@@ -26,8 +26,9 @@ def _trap1d(pars, x):
     Notes
     -----
     This is based on the interface described at
-    http://docs.astropy.org/en/stable/api/astropy.modeling.functional_models.Trapezoid1D.html#astropy.modeling.functional_models.Trapezoid1D
-    but implemented without looking at the code.
+    http://docs.astropy.org/en/stable/api/astropy.modeling.functional_models.Trapezoid1D.html
+    but implemented without looking at the code, so any errors
+    are not due to AstroPy.
     """
 
     (amplitude, center, width, slope) = pars

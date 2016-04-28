@@ -93,6 +93,15 @@ the parameter):
 
     * combining models (e.g. a + b as well as more complex)
 
+Using `sherpa.models`
+---------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   usermodel
+
+      
 Reference/API
 -------------
 
