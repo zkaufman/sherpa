@@ -43,6 +43,8 @@ tasks (such as X-ray Astronomy).
    overview/models
    overview/fit
    overview/error_analysis
+   overview/utilities
+   overview/ciao
 
 .. _help_docs::
 
