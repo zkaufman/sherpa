@@ -37,7 +37,12 @@ tasks (such as X-ray Astronomy).
    :caption: User Documentation
 
    quick
-   intro-models
+   overview/data
+   overview/stats
+   overview/optimisers
+   overview/models
+   overview/fit
+   overview/error_analysis
 
 .. _help_docs::
 

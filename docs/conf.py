@@ -56,11 +56,18 @@ extensions = [
     'numpydoc.numpydoc'
 ]
 
+# Stop the error messages about
+#   Unknown directive type "autosummary"
+#
+# Taken from https://github.com/phn/pytpm/issues/3#issuecomment-12133978
+#
+numpydoc_show_class_members = False
+
 # It looks like something has changed, so that it is easier (for now)
 # to use the default location for images (html_static_path) than
 # set one.
 #
-#ipython_savefig_dir = ['_generated']
+# ipython_savefig_dir = ['_generated']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -139,7 +146,9 @@ todo_include_todos = False
 
 rst_prolog = ""
 
-rst_epilog = """
+rst_epilog = ""
+
+renamed_rst_epilog = """
 
 .. _AstroPy: http://www.astropy.org/
 .. _ChIPS: http://cxc.harvard.edu/chips/
@@ -171,7 +180,7 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:
     import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
-    #html_theme_options = {}
+    # html_theme_options = {}
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
