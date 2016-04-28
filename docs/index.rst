@@ -30,11 +30,10 @@ from the  Chandra X-ray telescope, but it is designed to be a
 general-purpose package, which can be enhanced with domain-specific
 tasks (such as X-ray Astronomy).
 
-.. _user_docs::
-
 .. toctree::
    :maxdepth: 2
    :caption: User Documentation
+   :name: user_docs
 
    quick
    overview/data
@@ -46,11 +45,10 @@ tasks (such as X-ray Astronomy).
    overview/utilities
    overview/ciao
 
-.. _help_docs::
-
 .. toctree::
    :maxdepth: 2
    :caption: Getting Help
+   :name: help_docs
 
 If you have found a bug in Sherpa please report it. The preferred way
 is to create a new issue on the Sherpa
@@ -67,11 +65,10 @@ stack trace if it is necessary.
 
 At present there is no developer mailing list for Sherpa.
 
-.. _indices::
-
 .. toctree::
    :maxdepth: 2
    :caption: Indices and tables
+   :name: indices
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -197,11 +197,28 @@ above:
 
     In [7]: plt.plot(d.x, d.y, 'ko');
 
-    In [8]: plt.plot(d.x, g(d.x), linewidth=2);
+    In [8]: plt.plot(d.x, g(d.x), linewidth=2, label='Gaussian');
+
+    In [9]: plt.plot(d.x, t(d.x), linewidth=2, label='Trapezoid');
 
     @savefig data1d_gauss_trap_fit.png width=8in
-    In [9]: plt.plot(d.x, t(d.x), linewidth=2);
+    In [10]: plt.legend(loc=2);
 
+Combining models
+================
+
+.. note::
+
+    Need to write this up; can base it on the AstroPy example for
+    composite models.
+
+Linking parameter values
+========================
+
+.. note::
+
+   Need to come up with an example where it's easy to do
+    
 Including errors
 ================
 
