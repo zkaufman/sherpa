@@ -74,6 +74,7 @@ the ``overplot`` argument can be set to allow multiple values
 in the same plot:
 
 .. sherpa::    
+
     In [1]: from sherpa import plot
 
     In [1]: dplot = plot.DataPlot()

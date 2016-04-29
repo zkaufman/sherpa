@@ -363,8 +363,23 @@ on the machine.
 
    In [1]: print(errors.format())
 
+The :py:class:`~sherpa.fit.ErrorEstResults` instance returned by
+``est_errors`` contains the parameter values and limits:
+
+.. sherpa::
+
+   In [1]: print(errors)
+
+.. note::
+
+   It is my belief that the ``est_errors`` call above should have created
+   screen output for the lower and upper bounds, which suggests that the
+   sherpa directive isn't catching it as it is supposed to.
+
 Add screen output
 -----------------
+
+**this may need to be renamed given the note in the previous section**
 
 Since the error analysis can take a long time, it can be useful to
 have some indication of what is going on, particularly in an
@@ -384,7 +399,58 @@ Concentrating on a parameter
 
 It is possible to investigate the error surface of a single
 parameter using the
-:py:class:`~sherpa.plot.IntervalProjection` class.
+:py:class:`~sherpa.plot.IntervalProjection` class. The following shows
+how the error surface changes with the position of the gaussian. The
+:py:meth:`~sherpa.plot.IntervalProjection.prepare` method are given
+the range over which to vary the parameter (the range is chosen to
+be close to the three-sigma limit from the confidence analysis above,
+ahd the dotted line is added to indicate the three-sigma
+limit above the best-fit for a single parameter):
+
+.. sherpa::
+
+   In [1]: from sherpa.plot import IntervalProjection
+
+   In [1]: iproj = IntervalProjection()
+
+   In [1]: iproj.prepare(min=1.23, max=1.32, nloop=41)
+
+   In [1]: iproj.calc(gefit, ge.pos)
+
+   In [1]: iproj.plot()
+
+   @savefig data1d_pos_iproj.png width=8in
+   In [1]: plt.hlines(geres.statval + 9, 1.23, 1.32, linestyle='dotted');
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+A contour plot of two parameters
+--------------------------------
+
+The :py:class:`~sherpa.plot.RegionProjection` class supports
+the comparison of two parameters. The contours indicate the one,
+two, and three sigma contours.
+
+.. sherpa::
+
+   In [1]: from sherpa.plot import RegionProjection
+
+   In [1]: rproj = RegionProjection()
+
+   In [1]: rproj.prepare(min=[1.2, 1.75], max=[1.35, 2.1], nloop=[21, 21])
+
+   In [1]: rproj.calc(gefit, ge.pos, ge.fwhm)
+
+   @savefig data1d_pos_fwhm_rproj.png width=8in
+   In [1]: rproj.contour()
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
    
 Fitting two-dimensional data
 ============================
