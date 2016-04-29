@@ -29,13 +29,25 @@ modeling and fitting data. It was originally developed by the
 from the  Chandra X-ray telescope, but it is designed to be a
 general-purpose package, which can be enhanced with domain-specific
 tasks (such as X-ray Astronomy).
+Sherpa contains an expressive and powerful
+:doc:`modeling language <models/index>`,
+coupled with a
+:doc:`range of statistics <statistics/index>` and
+:doc:`robust optimisers <optimisers/index>`.
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Introduction
+   :name: intro
+
+   quick
+   ciao
 
 .. toctree::
    :maxdepth: 2
    :caption: User Documentation
    :name: user_docs
 
-   quick
    data/index
    models/index
    statistics/index
@@ -43,7 +55,6 @@ tasks (such as X-ray Astronomy).
    fit/index
    overview/error_analysis
    overview/utilities
-   overview/ciao
 
 .. toctree::
    :maxdepth: 2
@@ -54,7 +65,8 @@ If you have found a bug in Sherpa please report it. The preferred way
 is to create a new issue on the Sherpa
 `GitHub issue page <https://github.com/sherpa/sherpa/issues/>`_; that
 requires creating a free account on GitHub if you do not have one.
-For those using Sherpa as part of _CIAO, please use the
+For those using Sherpa as part of
+`CIAO <http://cxc.harvard.edu/ciao/>`_, please use the
 `CXC HelpDesk system <http://cxc.harvard.edu/helpdesk/>`_.
 
 Please include an example that demonstrates the issue that will allow
