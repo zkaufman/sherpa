@@ -32,30 +32,35 @@ import IPython.sphinxext.ipython_directive as ipy
 import sherpa
 
 
+# The Sherpa logging instance
+slog = logging.getLogger('sherpa')
+
+
 class SherpaIPythonDirective(ipy.IPythonDirective):
+    """Include the Sherpa logging output.
 
-    # Overload setup so that the sherpa logger is connected
-    # to the stdout of the EmbeddedSphinxShell. This should
-    # only be done once.
-    #
-    _added_logger = False
-
-    def add_logger(self, name):
-        if self._added_logger:
-            return
-
-        logger = logging.getLogger(name)
-        handler = logging.StreamHandler(self.shell.cout)
-        handler.setFormatter(sherpa.Formatter())
-        logger.addHandler(handler)
-        logger.setLevel(logging.INFO)
-
-        self._added_logger = True
+    Extend the ipython directive to automatically insert any
+    output from the Sherpa logger into the shell output.
+    To ensure consistent behavior the sherpa logging interface
+    is set to the INFO level at both setup and tear down. This
+    may be too restrictive.
+    """
 
     def setup(self):
         out = ipy.IPythonDirective.setup(self)
-        self.add_logger('sherpa')
+
+        self._hdlr = logging.StreamHandler(stream=self.shell.cout)
+        self._hdlr.setFormatter(sherpa.Formatter())
+        slog.addHandler(self._hdlr)
+
+        slog.setLevel(logging.INFO)
+
         return out
+
+    def teardown(self):
+        "Remove the logging handler for this session"
+        slog.removeHandler(self._hdlr)
+        slog.setLevel(logging.INFO)
 
 
 def setup(app):
