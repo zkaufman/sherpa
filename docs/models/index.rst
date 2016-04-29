@@ -23,7 +23,7 @@ Setup
 
 The following modules are assumed to have been imported:
 
-.. ipython::
+.. sherpa::
 
     In [1]: import numpy as np
 
@@ -37,7 +37,7 @@ Creating a model instance
 Models must be created before there parameter values can
 be set. In this case a one-dimensional gaussian:
 
-.. ipython::
+.. sherpa::
 
    In [1]: g = models.Gauss1D()
 
@@ -65,7 +65,7 @@ Models can be given a name, to help distinguish multiple versions
 of the same model type. The default value is the lower-case version
 of the class name.
 
-.. ipython::
+.. sherpa::
 
    In [1]: g.name
 
@@ -88,7 +88,7 @@ numerical operators. For instance, a one-dimensional gaussian
 plus a flat background would be represented by the following
 model:
 
-.. ipython::
+.. sherpa::
 
    In [1]: src1 = models.Gauss1D('src1')
 
@@ -101,7 +101,7 @@ model:
 Now consider fitting a second dataset where it is known that the background
 is two times higher than the first: 
    
-.. ipython::
+.. sherpa::
 
    In [1]: src2 = models.Gauss1D('src2')
 
@@ -142,7 +142,7 @@ the current settings. The
 contains the current value, but it can be set directly
 (just by assigning a value to the parameter):
 
-.. ipython::
+.. sherpa::
 
    In [1]: h.fwhm
 
@@ -178,7 +178,7 @@ and
 :py:attr:`~sherpa.models.parameter.Parameter.hard_max`
 (which are not displayed, and can not be changed).
 
-.. ipython::
+.. sherpa::
 
    In [1]: print(h)
 
@@ -275,7 +275,7 @@ Equality
 After the following, the two gaussian components have the same
 width:
 
-.. ipython::
+.. sherpa::
 
    In [1]: g2.fwhm.val
    
@@ -291,7 +291,7 @@ width:
 
 When displaying the model, the value and link expression are included:
 
-.. ipython::
+.. sherpa::
 
    In [1]: print(g2)
    
@@ -322,7 +322,7 @@ rather than using a fixed separation, a range can be used. One
 way to do this is to use a :py:class:`~sherpa.models.basic.Const1D`
 model, restricting the value its one parameter can vary.
 
-.. ipython::
+.. sherpa::
 
    In [1]: sep = models.Const1D('sep')
 
@@ -345,7 +345,7 @@ model expression. As it does not contribute to the model output
 directly, it should be multiplied by zero. So, for this example
 the model to be fit would be given by:
 
-.. ipython::
+.. sherpa::
 
    In [1]: mdl = g1 + g2 + 0 * sep
 

@@ -25,7 +25,7 @@ interface:
 This can be used in the same manner as the ``Gauss1D`` model
 in the :ref:`quick guide to Sherpa<quick-gauss1d>`.
 
-.. ipython::
+.. sherpa::
 
     In [1]: import numpy as np
 
@@ -78,7 +78,7 @@ in the :ref:`quick guide to Sherpa<quick-gauss1d>`.
     @savefig data1d_trap_fit.png width=8in
     In [10]: plt.legend(loc=2);
 
-.. ipython::
+.. sherpa::
    :suppress:
 
    In [1]: plt.clf()
@@ -108,7 +108,7 @@ from the AstroPy package.
 
 And now repeating the 2D fit:
 
-.. ipython::
+.. sherpa::
    
     In [1]: np.random.seed(0)
 

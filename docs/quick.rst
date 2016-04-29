@@ -11,7 +11,7 @@ Getting started
 
 The following modules are assumed to have been imported:
 
-.. ipython::
+.. sherpa::
 
     In [1]: import numpy as np
 
@@ -44,7 +44,7 @@ Fitting a one-dimensional data set
 The following data - where ``x`` is the independent axis and
 ``y`` the dependent one - is used in this example:
 
-.. ipython::
+.. sherpa::
 
     In [1]: np.random.seed(0)
 
@@ -65,7 +65,7 @@ The following data - where ``x`` is the independent axis and
     @savefig data1d.png width=8in
     In [5]: plt.plot(x, y, 'ko');
 
-.. ipython::
+.. sherpa::
    :suppress:
 
    In [1]: plt.clf()
@@ -77,7 +77,7 @@ This data can be stored in a Sherpa data object, where the first
 argument is a label for the data (this can be useful when multiple
 data sets are loaded, but has no influence on the results):
 
-.. ipython::
+.. sherpa::
 
     In [1]: from sherpa.data import Data1D
 
@@ -93,12 +93,13 @@ Define the model
 
 In this example a single model is used - a one-dimensional
 gaussian - but more complex examples are possible: these
-include multiple components, sharing models between data sets,
-and adding user-defined models. A full description of
-the model language and capabilities is provided in
+include :ref:`multiple components <model-combine>`,
+sharing models between data sets, and
+:doc:`adding user-defined models <models/usermodel>`.
+A full description of the model language and capabilities is provided in
 :doc:`models/index`.
 
-.. ipython::
+.. sherpa::
 
     In [1]: from sherpa.models import Gauss1D
 
@@ -106,10 +107,15 @@ the model language and capabilities is provided in
 
     In [3]: print(g)
 
+It is also possible to
+:ref:`restrict the range of a parameter <params-limits>`,
+:ref:`toggle parameters so that they are fixed or fitted <params-freeze>`,
+and :ref:`link parameters togetger <params-link>`.
+    
 Select the statistics
 ---------------------
 
-.. ipython::
+.. sherpa::
 
     In [1]: from sherpa.stats import LeastSq
 
@@ -120,7 +126,7 @@ Select the statistics
 Select the optimisation routine
 -------------------------------
 
-.. ipython::
+.. sherpa::
 
     In [1]: from sherpa.optmethods import LevMar
 
@@ -131,30 +137,40 @@ Select the optimisation routine
 Fit the data
 ------------
 
-.. ipython::
+The :py:meth:`~sherpa.fit.Fit.fit` method returns a
+:py:class:`~sherpa.fit.FitResults` instance, which
+contains information on how the fit performed, such as
+whether it succeeded (:py:attr:`~sherpa.fit.FitResults.succeeded`).
+One useful method for interactive analysis is
+:py:meth:`~sherpa.fit.FitResults.format`, which returns
+a string representation of the fit results, as shown below:
 
-    In [1]: from sherpa.fit import Fit
+.. sherpa::
 
-    In [2]: gfit = Fit(d, g, stat=stat, method=opt)
+   In [1]: from sherpa.fit import Fit
 
-    In [3]: print(gfit)
+   In [1]: gfit = Fit(d, g, stat=stat, method=opt)
 
-    In [4]: gres = gfit.fit()
+   In [1]: print(gfit)
 
-    In [5]: if not gres.succeeded: print(gres.message)
+   In [1]: gres = gfit.fit()
 
-    In [6]: plt.plot(d.x, d.y, 'ko', label='Data');
+   In [1]: print(gres.format())
+    
+   In [1]: if not gres.succeeded: print(gres.message)
 
-    In [7]: plt.plot(d.x, g(d.x), linewidth=2, label='Gaussian');
+   In [1]: plt.plot(d.x, d.y, 'ko', label='Data');
 
-    @savefig data1d_gauss_fit.png width=8in
-    In [8]: plt.legend(loc=2);
+   In [1]: plt.plot(d.x, g(d.x), linewidth=2, label='Gaussian');
 
-.. ipython::
+   @savefig data1d_gauss_fit.png width=8in
+   In [1]: plt.legend(loc=2);
+
+.. sherpa::
    :suppress:
 
    In [1]: plt.clf()
-      
+
 Extract the parameter values
 ----------------------------
 
@@ -164,7 +180,7 @@ The following relation is used to convert from the full-width
 half-maximum value, used by the ``Gauss1D`` model, to the Gaussian sigma
 value used to create the data: :math:`\rm{FWHM} = 2 \sqrt{2ln(2)} \sigma`.
 
-.. ipython::
+.. sherpa::
 
     In [1]: print(gres)
 
@@ -181,35 +197,19 @@ value used to create the data: :math:`\rm{FWHM} = 2 \sqrt{2ln(2)} \sigma`.
 The model, and its parameter values, can also be queried directly, as they
 have been changed by the fit:
 
-.. ipython::
+.. sherpa::
 
     In [1]: print(g)
 
     In [2]: print(g.pos)
 
-Combining models
-================
-
-.. note::
-
-    Need to write this up; can base it on the AstroPy example for
-    composite models. Also move to the models section.
-
-Linking parameter values
-========================
-
-.. note::
-
-   Need to come up with an example where it's easy to do. And move
-   to the models section.
-    
 Including errors
 ================
 
 For this example, the error on each bin is assumed to be
 known:
 
-.. ipython::
+.. sherpa::
 
     In [1]: dy = np.ones(x.size) * err_true
 
@@ -219,7 +219,7 @@ known:
 
 The statistic is changed from least squares to chi-square:
 
-.. ipython::
+.. sherpa::
 
     In [1]: from sherpa.stats import Chi2
 
@@ -243,7 +243,7 @@ in the result structure are populated: in particular the
 ``rsrat`` and ``qval`` fields, which give the reduced statistic
 and the probability of obtaining this statisitic value.
 
-.. ipython::
+.. sherpa::
 
     In [1]: print(geres)
 
@@ -254,10 +254,15 @@ Error analysis
 
     I need to work out how to do this
 
+Add screen output
++++++++++++++++++
+
+Something to do with logging.
+    
 Fitting two-dimensional data
 ============================
 
-.. ipython::
+.. sherpa::
 
     In [1]: np.random.seed(0)
 
@@ -273,7 +278,7 @@ Creating a data object
 To support irregularly-gridded data, the ND data sets require
 one-dimensional coordinate arrays:
 
-.. ipython::
+.. sherpa::
 
     In [1]: from sherpa.data import Data2D
 
@@ -288,7 +293,7 @@ Define the model
 
 Creating the model is the same as the one-dimensional case:
 
-.. ipython::
+.. sherpa::
 
     In [1]: from sherpa.models import Polynom2D
 
@@ -302,7 +307,7 @@ Control the parameters being fit
 To reduce the number of parameters being fit, the ``frozen`` attribute
 can be set:
 
-.. ipython::
+.. sherpa::
 
     In [1]: for n in ['cx1', 'cy1', 'cx2y1', 'cx1y2', 'cx2y2']:
        ...:     getattr(p2, n).frozen = True
@@ -315,7 +320,7 @@ Fit the data
 Fitting is no different (the same statistic and optimisation
 objects used earlier could have been re-used here):
 
-.. ipython::
+.. sherpa::
 
     In [1]: f2 = Fit(d2, p2, stat=LeastSq(), method=LevMar())
 
@@ -338,7 +343,7 @@ Display the model
 The model can be visualized by evaluating it over a grid of points
 and then displaying it:
 
-.. ipython::
+.. sherpa::
 
     In [1]: m2 = p2(x0axis, x1axis).reshape(128, 128)
 
@@ -364,7 +369,7 @@ and then displaying it:
     @savefig data2d_residuals.png width=8in
     In [10]: pimg(z - m2, "Residual")
 
-.. ipython::
+.. sherpa::
    :suppress:
 
    In [1]: plt.clf()

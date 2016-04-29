@@ -46,13 +46,21 @@ sys.path.insert(0, os.path.join(os.path.abspath('.'), 'code'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.coverage',
+
+    # currently do not look at coverage
+    # 'sphinx.ext.coverage',
+
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
 
     'IPython.sphinxext.ipython_console_highlighting',
+
+    # does ipython directive properly handle figure location;
+    # apparently not
     # 'IPython.sphinxext.ipython_directive',
+    #
     'sherpaext.ipython_directive',
+
     'numpydoc.numpydoc'
 ]
 

@@ -15,7 +15,7 @@ Overview
 
 The following modules are assumed to have been imported:
 
-.. ipython::
+.. sherpa::
 
    In [1]: import numpy as np
 
@@ -68,7 +68,7 @@ axis.
 Examples of unbinned data classes are
 :py:class:`~sherpa.data.Data1D` and :py:class:`~sherpa.data.Data2D`.
 
-.. ipython::
+.. sherpa::
 
    In [1]: np.random.seed(0)
 
@@ -96,7 +96,7 @@ an unbinned one, since it avoids having to estimate the integral
 of the model over each bin. It depends in part on how the bin
 size compares to the scale over which the model changes.
 
-.. ipython::
+.. sherpa::
 
    In [1]: z = np.random.gamma(20, scale=0.5, size=1000)
 
@@ -109,7 +109,7 @@ size compares to the scale over which the model changes.
    @savefig data_data2d.png width=8in
    In [1]: plt.bar(d2.xlo, d2.y, d2.xhi - d2.xlo);
 
-.. ipython::
+.. sherpa::
    :suppress:
 
    In [1]: plt.clf()
@@ -142,7 +142,7 @@ define the ranges to exclude or include. For example, the following
 hides those values where the independent axis values are between
 21.2 and 22.8:
 
-.. ipython::
+.. sherpa::
 
    In [1]: d1.ignore(21.2, 22.8)
 
@@ -155,7 +155,7 @@ full data set (the call to
 :py:meth:`~sherpa.data.BaseData.notice` removes the filter since
 no arguments were given):
 
-.. ipython::
+.. sherpa::
 
    In [1]: from sherpa.models import Polynom1D
 
@@ -202,7 +202,7 @@ to the data set.
 For :ref:`binned data sets <data_binned>` the X values refer
 to the middle of each bin.
 
-.. ipython::
+.. sherpa::
 
    In [1]: pdata = d1.to_plot()
 
@@ -213,7 +213,7 @@ to the middle of each bin.
    @savefig data_to_plot.png width=8in
    In [1]: plt.ylabel(pdata[5]);
    
-.. ipython::
+.. sherpa::
    :suppress:
 
    In [1]: plt.clf()
@@ -228,7 +228,7 @@ to evaluate a model on the grid defined by the data set. The
 first version uses the full grid, whereas the second respects
 any :ref:`filtering <data_filter>` applied to the data.
 
-.. ipython::
+.. sherpa::
 
    In [1]: d1.notice(22, 25)
    
@@ -247,7 +247,7 @@ any :ref:`filtering <data_filter>` applied to the data.
    @savefig data_eval_model.png width=8in
    In [1]: plt.legend(loc=2);
    
-.. ipython::
+.. sherpa::
    :suppress:
 
    In [1]: plt.clf()

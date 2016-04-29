@@ -1,5 +1,5 @@
 #
-#  Copyright (C) 2015  Smithsonian Astrophysical Observatory
+#  Copyright (C) 2015, 2016  Smithsonian Astrophysical Observatory
 #
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@ Extend Ipython.sphinxext.ipython.ipython_directive so that it captures
 the output of the sherpa logging interface.
 
 This could be made more generic, but it's not clear what the use
-cases are, so is it worth the effort.
+cases are, so is it worth the effort?
 """
 
 import logging
@@ -63,4 +63,11 @@ def setup(app):
     # It seems that this works to "sub class" the ipython directive
     ipy.setup(app)
     setup.app = app
-    app.add_directive('ipython', SherpaIPythonDirective)
+
+    # Sphinx v1.4.1 complains about the directive being overwritten,
+    # so for now just rename it. When Sphinx 1.4.2 is out this
+    # could be changed (use the warning suppression discussed at
+    # https://github.com/sphinx-doc/sphinx/issues/2451)
+    #
+    # app.add_directive('ipython', SherpaIPythonDirective)
+    app.add_directive('sherpa', SherpaIPythonDirective)
