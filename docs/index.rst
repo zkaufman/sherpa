@@ -53,6 +53,7 @@ coupled with a
    statistics/index
    optimisers/index
    fit/index
+   plots/index
    overview/error_analysis
    overview/utilities
 

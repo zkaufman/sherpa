@@ -188,36 +188,69 @@ Visualizing a data set
 
 The data objects contain several methods which can be used to
 visualize the data, but do not provide any direct plotting
-or display capabilities. The
+or display capabilities. There are low-level routines which
+provide access to the data - these include the
 :py:meth:`~sherpa.data.Data.to_plot` and
-:py:meth:`~sherpa.data.Data.to_contour` methods are used for
-one- and two-dimensional data sets respectively.
-For a one-dimensional data set, ``to_plot()`` returns a
-tuple containing::
-
-    xval, yval, error (statistical), error (systematic), x label, y label
-
-which respects any :ref:`data filtering <data_filter>` applied
-to the data set.
-For :ref:`binned data sets <data_binned>` the X values refer
-to the middle of each bin.
+:py:meth:`~sherpa.data.Data.to_contour` methods - but the
+preferred approach is to use the classes defined in the
+:py:mod:`sherpa.plot` module.
 
 .. sherpa::
 
-   In [1]: pdata = d1.to_plot()
+   In [1]: from sherpa.plot import DataPlot
+   
+   In [1]: pdata = DataPlot()
 
-   In [1]: plt.plot(pdata[0], pdata[1]);
+   In [1]: pdata.prepare(d2)
 
-   In [1]: plt.xlabel(pdata[4]);
+   @savefig data_int_to_plot.png width=8in
+   In [1]: pdata.plot()
 
-   @savefig data_to_plot.png width=8in
-   In [1]: plt.ylabel(pdata[5]);
+Note that although the data represented by ``d2`` is
+a histogram, the values are displayed at the center of the bin.
    
 .. sherpa::
    :suppress:
 
    In [1]: plt.clf()
+
+The plot objects automatically handle any filters applied to the
+data, as shown below.
    
+.. sherpa::
+
+   In [1]: d1.ignore(25, 30)
+
+   In [1]: d1.notice(26, 27)
+   
+   In [1]: pdata.prepare(d1)
+
+   @savefig data_to_plot.png width=8in
+   In [1]: pdata.plot()
+   
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+Note that the plot object stores the data given in the ``prepare()``
+call, so that changes to the underlying objects will not be reflected
+in future calls to ``plot()`` unless a new call to ``prepare()`` is
+made.
+
+.. sherpa::
+
+   In [1]: d1.notice()
+
+At this point, a call to ``pdata.plot()`` would re-create the previous
+plot, even though the filter has been removed from the underlying
+data object.
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
 Evaluating a model
 ------------------
 

@@ -3,7 +3,7 @@ A quick guide to modeling and fitting in Sherpa
 ***********************************************
 
 Here are some examples of using Sherpa to model and fit data.
-It is based on the `astropy.modelling
+It is based on some of the examples used in the `astropy.modelling
 documentation <http://docs.astropy.org/en/stable/modeling/>`_.
 
 Getting started
@@ -88,6 +88,44 @@ data sets are loaded, but has no influence on the results):
 At this point no errors are being used in the fit, so the ``staterror``
 and ``syserror`` fields are empty.
 
+Plotting the data
+-----------------
+
+The :py:mod:`sherpa.plot` module provides a number of classes that
+create pre-canned plots. For example, the
+:py:class:`sherpa.plot.DataPlot` class can be used to display the data.
+The steps taken are normally:
+
+1. create the object
+
+2. call the ``prepare()`` method with the appropriate arguments,
+   in this case the data object
+
+3. call the ``plot()`` method.
+
+Sherpa has two plotting backends: matplotlib, which is used by
+default for the standalone version, and Crates, which is used by
+CIAO.
+   
+.. sherpa::
+
+   In [1]: from sherpa.plot import DataPlot
+
+   In [1]: dplot = DataPlot()
+
+   In [1]: dplot.prepare(d)
+
+   @savefig data1d_dataplot.png width=8in
+   In [1]: dplot.plot()
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+In the following, plots will be created using either the
+classes in ``sherpa.plot`` or directly via matplotlib.
+   
 Define the model
 ----------------
 
@@ -111,7 +149,27 @@ It is also possible to
 :ref:`restrict the range of a parameter <params-limits>`,
 :ref:`toggle parameters so that they are fixed or fitted <params-freeze>`,
 and :ref:`link parameters togetger <params-link>`.
-    
+
+The :py:class:`sherpa.plot.ModelPlot` class can be used to visualize
+the model. The :py:meth:`~sherpa.plot.ModelPlot.prepare` method
+takes both a data object and the model to plot:
+
+.. sherpa::
+
+   In [1]: from sherpa.plot import ModelPlot
+
+   In [1]: mplot = ModelPlot()
+
+   In [1]: mplot.prepare(d, g)
+
+   @savefig data1d_modelplot.png width=8in
+   In [1]: mplot.plot()
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
 Select the statistics
 ---------------------
 
@@ -159,6 +217,35 @@ a string representation of the fit results, as shown below:
     
    In [1]: if not gres.succeeded: print(gres.message)
 
+The :py:class:`sherpa.plot.FitPlot` class will display the data
+and model. The :py:meth:`~sherpa.plot.FitPlot.prepare` method
+requires data and model plot objects; in this case the previous
+versions can be re-used, although the model plot needs to be
+updated to reflect the changes to the model parameters:
+
+.. sherpa::
+
+   In [1]: from sherpa.plot import FitPlot
+
+   In [1]: fplot = FitPlot()
+
+   In [1]: mplot.prepare(d, g)
+   
+   In [1]: fplot.prepare(dplot, mplot)
+
+   @savefig data1d_fitplot.png width=8in
+   In [1]: fplot.plot()
+   
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+As the model can be evaluated directly, this plot can also be
+created manually:
+
+.. sherpa::
+   
    In [1]: plt.plot(d.x, d.y, 'ko', label='Data');
 
    In [1]: plt.plot(d.x, g(d.x), linewidth=2, label='Gaussian');
@@ -213,9 +300,9 @@ known:
 
     In [1]: dy = np.ones(x.size) * err_true
 
-    In [2]: de = Data1D('with-errors', x, y, staterror=dy)
+    In [1]: de = Data1D('with-errors', x, y, staterror=dy)
 
-    In [3]: print(de)
+    In [1]: print(de)
 
 The statistic is changed from least squares to chi-square:
 
@@ -223,25 +310,29 @@ The statistic is changed from least squares to chi-square:
 
     In [1]: from sherpa.stats import Chi2
 
-    In [2]: ustat = Chi2()
+    In [1]: ustat = Chi2()
 
-    In [3]: ge = Gauss1D('gerr')
+    In [1]: ge = Gauss1D('gerr')
 
-    In [4]: gefit = Fit(de, ge, stat=ustat, method=opt)
+    In [1]: gefit = Fit(de, ge, stat=ustat, method=opt)
 
-    In [5]: geres = gefit.fit()
+    In [1]: geres = gefit.fit()
 
-    In [6]: if not geres.succeeded: print(geres.message)
+    In [1]: print(geres.format())
+    
+    In [1]: if not geres.succeeded: print(geres.message)
 
-    In [7]: print(g)
+    In [1]: print(g)
 
-    In [8]: print(ge)
+    In [1]: print(ge)
 
 Since the error value is independent of bin, then the fit results
 should be the same here. The difference is that more of the fields
 in the result structure are populated: in particular the
-``rsrat`` and ``qval`` fields, which give the reduced statistic
-and the probability of obtaining this statisitic value.
+:py:attr:`~sherpa.fit.FitResults.rstat` and
+:py:attr:`~sherpa.fit.FitResults.qval` fields, which give the
+reduced statistic and the probability of obtaining this statisitic value
+respectively.
 
 .. sherpa::
 
@@ -250,15 +341,51 @@ and the probability of obtaining this statisitic value.
 Error analysis
 --------------
 
-.. note::
+The default error estimation routine is
+:py:attr:`~sherpa.estmethods.Covariance`, which will be replaced by
+:py:attr:`~sherpa.estmethods.Confidence` for this example:
 
-    I need to work out how to do this
+.. sherpa::
+
+   In [1]: from sherpa.estmethods import Confidence
+
+   In [1]: gefit.estmethod = Confidence()
+
+   In [1]: print(gefit.estmethod)
+
+Running the error analysis can take time, for particularly complex
+models. The default behavior is to use all the available CPU cores
+on the machine.
+
+.. sherpa::
+
+   In [1]: errors = gefit.est_errors()
+
+   In [1]: print(errors.format())
 
 Add screen output
-+++++++++++++++++
+-----------------
 
-Something to do with logging.
-    
+Since the error analysis can take a long time, it can be useful to
+have some indication of what is going on, particularly in an
+interactive session. Sherpa uses the standard Python logging framework
+to control the screen output produced by the
+:py:meth:`~sherpa.fit.Fit.est_errors` method.
+
+.. note::
+
+   Unfortunately I can't seem to get them working (although they are
+   actually being created when the code is being run, since you can see
+   them in the console output). So perhaps it is partly an issue with
+   my sherpa directive, but I have issues on the command line too.
+
+Concentrating on a parameter
+----------------------------
+
+It is possible to investigate the error surface of a single
+parameter using the
+:py:class:`~sherpa.plot.IntervalProjection` class.
+   
 Fitting two-dimensional data
 ============================
 

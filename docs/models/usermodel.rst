@@ -29,33 +29,33 @@ in the :ref:`quick guide to Sherpa<quick-gauss1d>`.
 
     In [1]: import numpy as np
 
-    In [2]: import matplotlib.pyplot as plt
+    In [1]: import matplotlib.pyplot as plt
 
     In [1]: np.random.seed(0)
 
-    In [2]: x = np.linspace(-5., 5., 200)
+    In [1]: x = np.linspace(-5., 5., 200)
 
-    In [3]: ampl_true = 3
+    In [1]: ampl_true = 3
 
-    In [4]: pos_true = 1.3
+    In [1]: pos_true = 1.3
 
-    In [5]: sigma_true = 0.8
+    In [1]: sigma_true = 0.8
 
-    In [6]: err_true = 0.2
+    In [1]: err_true = 0.2
 
-    In [3]: y = ampl_true * np.exp(-0.5 * (x - pos_true)**2 / sigma_true**2)
+    In [1]: y = ampl_true * np.exp(-0.5 * (x - pos_true)**2 / sigma_true**2)
 
-    In [4]: y += np.random.normal(0., err_true, x.shape)
+    In [1]: y += np.random.normal(0., err_true, x.shape)
 
     In [1]: from sherpa.data import Data1D
 
-    In [2]: d = Data1D('example', x, y)
+    In [1]: d = Data1D('example', x, y)
 
     In [1]: from trap import Trap1D
 
-    In [2]: t = Trap1D()
+    In [1]: t = Trap1D()
 
-    In [3]: print(t)
+    In [1]: print(t)
 
     In [1]: from sherpa.fit import Fit
     
@@ -63,20 +63,31 @@ in the :ref:`quick guide to Sherpa<quick-gauss1d>`.
     
     In [1]: from sherpa.optmethods import LevMar
     
-    In [4]: tfit = Fit(d, t, stat=LeastSq(), method=LevMar())
+    In [1]: tfit = Fit(d, t, stat=LeastSq(), method=LevMar())
 
-    In [5]: tres = tfit.fit()
+    In [1]: tres = tfit.fit()
 
-    In [6]: if not tres.succeeded: print(tres.message)
+    In [1]: if not tres.succeeded: print(tres.message)
 
-    In [7]: plt.plot(d.x, d.y, 'ko');
+Rather than use a :py:class:`~sherpa.plot.ModelPlot` object,
+the ``overplot`` argument can be set to allow multiple values
+in the same plot:
 
-    In [8]: # plt.plot(d.x, g(d.x), linewidth=2, label='Gaussian');
+.. sherpa::    
+    In [1]: from sherpa import plot
 
-    In [9]: plt.plot(d.x, t(d.x), linewidth=2, label='Trapezoid');
+    In [1]: dplot = plot.DataPlot()
+
+    In [1]: dplot.prepare(d)
+
+    In [1]: dplot.plot()
+
+    In [1]: mplot = plot.ModelPlot()
+
+    In [1]: mplot.prepare(d, t)
 
     @savefig data1d_trap_fit.png width=8in
-    In [10]: plt.legend(loc=2);
+    In [1]: mplot.plot(overplot=True)
 
 .. sherpa::
    :suppress:
