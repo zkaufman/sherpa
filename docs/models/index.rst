@@ -27,9 +27,9 @@ The following modules are assumed to have been imported:
 
     In [1]: import numpy as np
 
-    In [2]: from sherpa import models
+    In [1]: import matplotlib.pyplot as plt
 
-    In [3]: import matplotlib.pyplot as plt
+    In [1]: from sherpa import models
 
 Creating a model instance
 -------------------------
