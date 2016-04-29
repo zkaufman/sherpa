@@ -355,9 +355,13 @@ The default error estimation routine is
 
 Running the error analysis can take time, for particularly complex
 models. The default behavior is to use all the available CPU cores
-on the machine.
+on the machine, **but I force only one core here due to some
+strange interaction with logging which leads to the loss of the screen
+output from est_errors if multiple cores are used**.
 
 .. sherpa::
+
+   In [1]: gefit.estmethod.numcores = 1
 
    In [1]: errors = gefit.est_errors()
 
@@ -370,32 +374,29 @@ The :py:class:`~sherpa.fit.ErrorEstResults` instance returned by
 
    In [1]: print(errors)
 
-.. note::
+Screen output
+-------------
 
-   It is my belief that the ``est_errors`` call above should have created
-   screen output for the lower and upper bounds, which suggests that the
-   sherpa directive isn't catching it as it is supposed to.
-
-Add screen output
------------------
-
-**this may need to be renamed given the note in the previous section**
-
-Since the error analysis can take a long time, it can be useful to
-have some indication of what is going on, particularly in an
-interactive session. Sherpa uses the standard Python logging framework
-to control the screen output produced by the
-:py:meth:`~sherpa.fit.Fit.est_errors` method.
+The default behavior - when *not* using the default 
+:py:class:`~sherpa.estmethods.Covariance` method - is for 
+`est_errors` to print out the parameter
+bounds as it finds them, which can be useful in an interactive session
+since the error analysis can be slow. This can be controlled using
+the Sherpa logging interface.
 
 .. note::
 
-   Unfortunately I can't seem to get them working (although they are
-   actually being created when the code is being run, since you can see
-   them in the console output). So perhaps it is partly an issue with
-   my sherpa directive, but I have issues on the command line too.
+   I need a link to a section describing this. However, first I need
+   to work out just what it is when run on multiple cores causes the
+   output to be lost.
 
-Concentrating on a parameter
-----------------------------
+   Oh, hold on. Does it somehow create a new shell to talk to? Or
+   somehow create a different instance. Note that the default handler
+   works okay even in this case (i.e. all the bounds are printed to
+   stdout), but maybe something in the ipython directive is "causing fun".
+
+A single parameter
+------------------
 
 It is possible to investigate the error surface of a single
 parameter using the
@@ -427,6 +428,15 @@ limit above the best-fit for a single parameter):
 
    In [1]: plt.clf()
 
+The curve is stored in the ``IntervalProjection`` object (in fact, these
+values are created by the call to
+:py:meth:`~sherpa.plot.IntervalProjection.calc` and so can be accesed without
+needing to create the plot):
+
+.. sherpa::
+
+   In [1]: print(iproj)
+
 A contour plot of two parameters
 --------------------------------
 
@@ -440,9 +450,9 @@ two, and three sigma contours.
 
    In [1]: rproj = RegionProjection()
 
-   In [1]: rproj.prepare(min=[1.2, 1.75], max=[1.35, 2.1], nloop=[21, 21])
+   In [1]: rproj.prepare(min=[2.8, 1.75], max=[3.3, 2.1], nloop=[21, 21])
 
-   In [1]: rproj.calc(gefit, ge.pos, ge.fwhm)
+   In [1]: rproj.calc(gefit, ge.ampl, ge.fwhm)
 
    @savefig data1d_pos_fwhm_rproj.png width=8in
    In [1]: rproj.contour()
@@ -451,7 +461,52 @@ two, and three sigma contours.
    :suppress:
 
    In [1]: plt.clf()
+
+As with the single-parameter case, the statistic values for the grid are
+stored in the ``RegionProjection`` object by the 
+:py:meth:`~sherpa.plot.RegionProjection.calc` call, 
+and so can be accesed without needing to create the contour plot. Useful
+fields include ``x0`` and ``x1`` (the two parameter values), 
+``y`` (the statistic value), and ``levels`` (the values used for the
+contours):
+
+.. sherpa::
+
+   In [1]: lvls = rproj.levels
+
+   In [1]: print(lvls)
    
+   In [1]: (nx, ny) = rproj.nloop
+
+   In [1]: x0, x1, y = rproj.x0, rproj.x1, rproj.y
+
+   In [1]: y.resize(ny, nx)
+
+   In [1]: plt.imshow(y, origin='lower', cmap='viridis_r', aspect='auto',
+      ...:            extent=(x0.min(), x0.max(), x1.min(), x1.max()));
+
+   In [1]: plt.colorbar();
+
+   In [1]: plt.xlabel(rproj.xlabel)
+
+   In [1]: plt.ylabel(rproj.ylabel)
+
+   In [1]: x0.resize(ny, nx)
+
+   In [1]: x1.resize(ny, nx)
+
+   In [1]: cs = plt.contour(x0, x1, y, levels=lvls)
+
+   In [1]: lbls = [(v, r"${}\sigma$".format(i+1)) for i, v in enumerate(lvls)]
+
+   @savefig data1d_pos_fwhm_rproj_manual.png width=8in
+   In [1]: plt.clabel(cs, lvls, fmt=dict(lbls));
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
 Fitting two-dimensional data
 ============================
 
