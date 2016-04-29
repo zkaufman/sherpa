@@ -78,6 +78,11 @@ in the :ref:`quick guide to Sherpa<quick-gauss1d>`.
     @savefig data1d_trap_fit.png width=8in
     In [10]: plt.legend(loc=2);
 
+.. ipython::
+   :suppress:
+
+   In [1]: plt.clf()
+   
 .. note::
 
    This needs to be cleaned up to separate out unnescessary code,

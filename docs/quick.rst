@@ -65,6 +65,11 @@ The following data - where ``x`` is the independent axis and
     @savefig data1d.png width=8in
     In [5]: plt.plot(x, y, 'ko');
 
+.. ipython::
+   :suppress:
+
+   In [1]: plt.clf()
+       
 Creating a data object
 ----------------------
 
@@ -144,7 +149,12 @@ Fit the data
 
     @savefig data1d_gauss_fit.png width=8in
     In [8]: plt.legend(loc=2);
-    
+
+.. ipython::
+   :suppress:
+
+   In [1]: plt.clf()
+      
 Extract the parameter values
 ----------------------------
 
@@ -353,6 +363,11 @@ and then displaying it:
 
     @savefig data2d_residuals.png width=8in
     In [10]: pimg(z - m2, "Residual")
+
+.. ipython::
+   :suppress:
+
+   In [1]: plt.clf()
 
 
 Simultaneous fits
