@@ -40,7 +40,7 @@ Create a simulated data set:
 
    In [1]: x1low, x1high = 4000, 4800
 
-   In [1]: dx = 5
+   In [1]: dx = 15
 
    In [1]: x1, x0 = np.mgrid[x1low:x1high:dx, x0low:x0high:dx]
 
@@ -274,7 +274,7 @@ This can be compared to the
 
    In [1]: rproj = RegionProjection()
 
-   In [1]: rproj.prepare(min=[114, 1.95], max=[132, 2.25], nloop=[21, 21])
+   In [1]: rproj.prepare(min=[95, 1.8], max=[150, 2.6], nloop=[21, 21])
 
    In [1]: rproj.calc(f, mdl.r0, mdl.alpha)
 
