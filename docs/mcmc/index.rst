@@ -154,9 +154,23 @@ Plot up:
 
    In [1]: plt.xlabel('Iteration');
 
-   @savefig mcmc_trace_r0.png width=8in
+   @savefig mcmc_trace_r0_manual.png width=8in
    In [1]: plt.ylabel('r0');
 
+Or using the :py:mod:`sherpa.plot` module:
+
+.. sherpa::
+
+   In [1]: from sherpa import plot
+
+   In [1]: tplot = plot.TracePlot()
+
+   In [1]: tplot.prepare(svals, name='Statistic')
+
+   @savefig mcmc_trace_r0.png width=8in
+   In [1]: tplot.plot()
+
+   
 .. sherpa::
    :suppress:
 
@@ -179,11 +193,9 @@ Plot up:
    
 .. sherpa::
 
-   In [1]: from sherpa import plot
-
    In [1]: pdf = plot.PDFPlot()
 
-   In [1]: pdf.prepare(pvals[1, :], 20, False, 'xpos')
+   In [1]: pdf.prepare(pvals[1, :], 20, False, 'xpos', name='example')
 
    @savefig mcmc_pdf_xpos.png width=8in
    In [1]: pdf.plot()
@@ -219,3 +231,38 @@ Plot up:
 
    In [1]: plt.clf()
 
+Reference/API
+=============
+
+sherpa.sim Package
+------------------
+
+.. automodule:: sherpa.sim
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+sherpa.sim.simulate Package
+---------------------------
+
+.. automodule:: sherpa.sim.simulate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+sherpa.sim.sample Package
+-------------------------
+
+.. automodule:: sherpa.sim.sample
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+sherpa.sim.mh Package
+---------------------
+
+.. automodule:: sherpa.sim.mh
+    :members:
+    :undoc-members:
+    :show-inheritance:
+    
