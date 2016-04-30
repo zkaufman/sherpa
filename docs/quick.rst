@@ -626,6 +626,14 @@ and then displaying it:
 Simultaneous fits
 =================
 
-.. note::
+I'd like to fit src + background and background.
 
-    I need to work out how to do this
+.. sherpa::
+
+   In [1]: print("Nothing to see here")
+   
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+

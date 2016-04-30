@@ -83,6 +83,11 @@ but :ref:`linking the positions of the two gaussians <params-link>`
    In [1]: plt.legend(loc=2);
 
 .. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+.. sherpa::
 
    In [1]: print(g1)
 

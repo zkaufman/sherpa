@@ -117,6 +117,9 @@ models. An example of the use of linking would be to force the two
 FWHM parameters to be the same but to let the position and amplitude
 values vary independently.
 
+More information is available in the
+:doc:`combining models <combine>` documentation.
+
 .. note::
 
    It is possible to have models depend on the values of other models,
@@ -381,6 +384,7 @@ Using `sherpa.models`
    :maxdepth: 1
 
    integrate
+   combine
    evaluation
    usermodel
    cache
@@ -424,6 +428,14 @@ sherpa.astro.models Package
 ---------------------------
 
 .. automodule:: sherpa.astro.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+sherpa.astro.optical Package
+----------------------------
+
+.. automodule:: sherpa.astro.optical
     :members:
     :undoc-members:
     :show-inheritance:
