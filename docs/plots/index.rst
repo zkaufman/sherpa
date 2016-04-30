@@ -9,6 +9,9 @@ Sherpa has support for different plot backends, at present limited
 to matplotlib and Crates. Interactive visualizations of images is
 provided by DS9 - an Astronomical image viewer - if installed.
 
+There is limited support for visualizing two-dimensional data sets
+with matplotlib.
+
 .. note::
 
    The `sherpa.plot` module also includes error-estimation
