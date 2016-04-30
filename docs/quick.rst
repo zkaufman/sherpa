@@ -421,7 +421,7 @@ limit above the best-fit for a single parameter):
    In [1]: iproj.plot()
 
    @savefig data1d_pos_iproj.png width=8in
-   In [1]: plt.hlines(geres.statval + 9, 1.23, 1.32, linestyle='dotted');
+   In [1]: plt.axhline(geres.statval + 9, linestyle='dotted');
 
 .. sherpa::
    :suppress:
