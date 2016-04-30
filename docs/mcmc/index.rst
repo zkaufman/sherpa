@@ -26,7 +26,10 @@ Example
 .. note::
 
    This example probably needs to be simplified to reduce the run time
-   
+
+Simulate the data
+------------------
+
 Create a simulated data set:
 
 .. sherpa::
@@ -62,6 +65,9 @@ Create a simulated data set:
    # Add in Poisson noise
    In [1]: msim = np.random.poisson(mexp)
 
+What does the data look like?
+-----------------------------
+
 Use an arcsinh transform to view the data, based on the work of
 `Lupton, Gunn & Szalay (1999)
 <https://ui.adsabs.harvard.edu/#abs/1999AJ....118.1406L>`_.
@@ -79,6 +85,9 @@ Use an arcsinh transform to view the data, based on the work of
    :suppress:
 
    In [1]: plt.clf()
+
+Find the starting point for the MCMC
+------------------------------------
 
 Set up a model and use the standard Sherpa approach to find a good
 starting place for the MCMC analysis:
@@ -127,8 +136,12 @@ Now calculate the covariance matrix (the default):
    :suppress:
 
    In [1]: plt.clf()
-   
-Finally, run a chain (use a small number to keep the run time low):
+
+Run the chain
+-------------
+
+Finally, run a chain (use a small number to keep the run time low
+for this example):
 
 .. sherpa::
 
@@ -146,7 +159,8 @@ Finally, run a chain (use a small number to keep the run time low):
 
    In [1]: accept.sum() * 1.0 / 1000
 
-Plot up:
+Trace plots
+-----------
 
 .. sherpa::
 
@@ -169,41 +183,41 @@ Or using the :py:mod:`sherpa.plot` module:
 
    @savefig mcmc_trace_r0.png width=8in
    In [1]: tplot.plot()
-
    
 .. sherpa::
    :suppress:
 
    In [1]: plt.clf()
-   
-.. sherpa::
 
-   In [1]: plt.scatter(pvals[0, :] - truth.r0.val,
-      ...:             pvals[4, :] - truth.alpha.val, alpha=0.3);
+PDF of a parameter
+------------------
 
-   In [1]: plt.xlabel(r'$\Delta r_0$', size=18);
-
-   @savefig mcmc_scatter_r0_alpha.png width=8in
-   In [1]: plt.ylabel(r'$\Delta \alpha$', size=18);
-
-.. sherpa::
-   :suppress:
-
-   In [1]: plt.clf()
-   
 .. sherpa::
 
    In [1]: pdf = plot.PDFPlot()
 
    In [1]: pdf.prepare(pvals[1, :], 20, False, 'xpos', name='example')
 
-   @savefig mcmc_pdf_xpos.png width=8in
    In [1]: pdf.plot()
 
+   # Add in the covariance estimate
+   In [1]: xlo, xhi = eres.parmins[1] + eres.parvals[1], eres.parmaxes[1] + eres.parvals[1]
+   
+   In [1]: plt.annotate('', (xlo, 90), (xhi, 90), arrowprops={'arrowstyle': '<->'});
+
+   @savefig mcmc_pdf_xpos.png width=8in
+   In [1]: plt.plot([eres.parvals[1]], [90], 'ok');
+   
 .. sherpa::
    :suppress:
 
    In [1]: plt.clf()
+
+CDF for a parameter
+-------------------
+
+Normalise by the actual answer to make it wasier to see how well
+the results match reality:
 
 .. sherpa::
 
@@ -225,6 +239,49 @@ Or using the :py:mod:`sherpa.plot` module:
 
    @savefig mcmc_cdf_xpos.png width=8in
    In [1]: plt.title('');
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+Scatter plot
+------------
+
+.. sherpa::
+
+   In [1]: plt.scatter(pvals[0, :] - truth.r0.val,
+      ...:             pvals[4, :] - truth.alpha.val, alpha=0.3);
+
+   In [1]: plt.xlabel(r'$\Delta r_0$', size=18);
+
+   @savefig mcmc_scatter_r0_alpha.png width=8in
+   In [1]: plt.ylabel(r'$\Delta \alpha$', size=18);
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+   
+This can be compared to the
+:py:class:`~sherpa.plot.RegionProjection` calculation:
+
+.. sherpa::
+
+   In [1]: plt.scatter(pvals[0, :], pvals[4, :], alpha=0.3);
+
+   In [1]: from sherpa.plot import RegionProjection
+
+   In [1]: rproj = RegionProjection()
+
+   In [1]: rproj.prepare(min=[114, 1.95], max=[132, 2.25], nloop=[21, 21])
+
+   In [1]: rproj.calc(f, mdl.r0, mdl.alpha)
+
+   In [1]: rproj.contour(overplot=True)
+
+   @savefig mcmc_scatter_r0_alpha_compare.png width=8in
+   In [1]: plt.xlabel(r'$r_0$'); plt.ylabel(r'$\alpha$');
 
 .. sherpa::
    :suppress:
