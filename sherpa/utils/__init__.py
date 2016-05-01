@@ -900,7 +900,7 @@ def multinormal_pdf(x, mu, sigma):
     """The PDF of a multivariate-normal.
 
     Returns the probability density function (PDF) of a
-    multivariate normal [1]_.
+    multivariate normal [MND]_.
 
     Parameters
     ----------
@@ -918,7 +918,7 @@ def multinormal_pdf(x, mu, sigma):
     References
     ----------
 
-    .. [1] http://en.wikipedia.org/wiki/Multivariate_normal_distribution
+    .. [MND] http://en.wikipedia.org/wiki/Multivariate_normal_distribution
 
     """
     x = numpy.asarray(x)
@@ -951,7 +951,7 @@ def multit_pdf(x, mu, sigma, dof):
     """The PDF of a multivariate student-t.
 
     Returns the probability density function (PDF) of a
-    multivariate student-t distribution [1]_.
+    multivariate student-t distribution [Student]_.
 
     Parameters
     ----------
@@ -970,7 +970,7 @@ def multit_pdf(x, mu, sigma, dof):
     References
     ----------
 
-    .. [1] http://en.wikipedia.org/wiki/Multivariate_Student_distribution
+    .. [Student] http://en.wikipedia.org/wiki/Multivariate_Student_distribution
 
     """
     n = float(dof)
@@ -2126,7 +2126,7 @@ def Knuth_close(x, y, tol, myop=operator.__or__):
 
     Notes
     -----
-    The following text was taken verbatim from [1]_:
+    The following text was taken verbatim from [Boost]_.
 
     In most cases it is unreasonable to use an operator==(...)
     for a floating-point values equality check. The simple solution
@@ -2150,7 +2150,7 @@ def Knuth_close(x, y, tol, myop=operator.__or__):
     References
     ----------
 
-    .. [1] http://www.boost.org/doc/libs/1_35_0/libs/test/doc/components/test_tools/floating_point_comparison.html#Introduction
+    .. [Boost] http://www.boost.org/doc/libs/1_35_0/libs/test/doc/components/test_tools/floating_point_comparison.html#Introduction
 
 
     """
@@ -2436,7 +2436,7 @@ def transformed_quad_coef(x, f):
 
 def demuller(fcn, xa, xb, xc, fa=None, fb=None, fc=None, args=(),
              maxfev=32, tol=1.0e-6):
-    """A root-finding algorithm using Muller's method [1]_.
+    """A root-finding algorithm using Muller's method [Muller]_.
 
     p( x ) = f( xc ) + A ( x - xc ) + B ( x - xc ) ( x - xb )
 
@@ -2478,7 +2478,7 @@ def demuller(fcn, xa, xb, xc, fa=None, fb=None, fc=None, args=(),
     References
     ----------
 
-    .. [1] http://en.wikipedia.org/wiki/Muller%27s_method
+    .. [Muller] http://en.wikipedia.org/wiki/Muller%27s_method
 
     """
 
@@ -2785,13 +2785,14 @@ def zeroin(fcn, xa, xb, fa=None, fb=None, args=(), maxfev=32, tol=1.0e-2):
 
        4*DBL_EPSILON*abs(x) + tol
 
-    using the algorithm from [1]_.
+    using the algorithm from [Forsythe]_.
 
     References
     ----------
 
-    .. [1] G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
-           computations. M., Mir, 1980, p.180 of the Russian edition
+    .. [Forsythe] G.Forsythe, M.Malcolm, C.Moler, Computer methods for
+           mathematical computations. M., Mir, 1980, p.180 of the
+           Russian edition
 
     Notes
     -----
