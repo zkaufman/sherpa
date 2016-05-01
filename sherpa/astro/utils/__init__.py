@@ -51,6 +51,8 @@ except ImportError:
     warning('failed to import sherpa.astro.utils._region; Region routines ' +
             'will not be available')
 
+__all__ = tuple(__all__)
+
 _hc = 12.39841874  # nist.gov in [keV-Angstrom]
 
 
