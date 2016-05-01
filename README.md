@@ -26,6 +26,7 @@
   - [FFTW library](#fftw-library)
   - [XSPEC](#xspec)
   - [Other customization options](#other-customization-options)
+- [Building the documentation](#building-the-documentation)
 - [History](#history)
   - [Previous releases](#previous-releases)
   
@@ -526,6 +527,29 @@ These options include:
 
 The `setup.cfg` file in the Sherpa source distribution contains more information
 about these options.
+
+Building the documentation
+==========================
+
+There is an experimental version of the Sphinx docs available in the
+`docs/` directory. For the documentation, IPython versions 4.1 and 4.2
+appear to have a problem with the `@savefig` IPython directive
+<https://github.com/ipython/ipython/issues/8733>.
+
+    % conda create -n=sherpa-sphinx python=2.7 matplotlib astropy pep8 pyflakes 'ipython<4.1' sphinx numpydoc
+    % source activate sherpa-sphinx
+
+    % python setup.py install
+    % cd docs
+    % make html
+
+Unfortunately, IPython 4.0.3 seems to have a problem at the end of the
+`make html` call - reporting
+
+    sqlite3.OperationalError: attempt to write a readonly database
+
+but it does not seem to be a problem. The output can be viewed at
+`_build/html/index.html`.
 
 History
 =======
