@@ -66,7 +66,6 @@ def evaluates_model(func):
 
 
 class StatInfoResults(NoNewAttributesAfterInit):
-
     """A summary of the current statistic value for
     one or more data sets.
 
@@ -77,7 +76,7 @@ class StatInfoResults(NoNewAttributesAfterInit):
     ids : sequence of int or str
        The data set ids (it may be a tuple or array) included in the
        results.
-    bkg_ids: sequence of int or str, or `None`
+    bkg_ids : sequence of int or str, or ``None``
        The background data set ids (it may be a tuple or array)
        included in the results, if any.
     statname : str
@@ -86,16 +85,16 @@ class StatInfoResults(NoNewAttributesAfterInit):
        The statistic value.
     numpoints : int
        The number of bins used in the fits.
-    dof: int
+    dof : int
        The number of degrees of freedom in the fit (the number of
        bins minus the number of free parameters).
-    qval: number or `None`
+    qval : number or ``None``
        The Q-value (probability) that one would observe the reduced
        statistic value, or a larger value, if the assumed model is
        true and the current model parameters are the true parameter
-       values. This will be `None` if the value can not be calculated
+       values. This will be ``None`` if the value can not be calculated
        with the current statistic (e.g. the Cash statistic).
-    rstat: number of `None`
+    rstat : number or ``None``
        The reduced statistic value (the `statval` field divided by
        `dof`). This is not calculated for all statistics.
 
@@ -146,14 +145,13 @@ class StatInfoResults(NoNewAttributesAfterInit):
 
 
 class FitResults(NoNewAttributesAfterInit):
-
     """A summary of the fit results.
 
     Attributes
     ----------
     datasets : sequence of int or str
        A sequence of the data set ids included in the results.
-    itermethodname : str or `None`
+    itermethodname : str or ``None``
        What iterated-fit scheme was used, if any.
     statname : str
        The name of the statistic function.
@@ -169,19 +167,19 @@ class FitResults(NoNewAttributesAfterInit):
     istatval : number
        The statistic value at the start of the fit.
     dstatval : number
-       The change in the statistic value (`istatval - statval`).
+       The change in the statistic value (``istatval - statval``).
     numpoints : int
        The number of bins used in the fits.
     dof : int
        The number of degrees of freedom in the fit (the number of
        bins minus the number of free parameters).
-    qval : number or `None`
+    qval : number or ``None``
        The Q-value (probability) that one would observe the reduced
        statistic value, or a larger value, if the assumed model is
        true and the current model parameters are the true parameter
-       values. This will be `None` if the value can not be calculated
+       values. This will be ``None`` if the value can not be calculated
        with the current statistic (e.g.  the Cash statistic).
-    rstat : number or `None`
+    rstat : number or ``None``
        The reduced statistic value (the `statval` field divided by
        `dof`). This is not calculated for all statistics.
     message : str
@@ -590,13 +588,13 @@ class IterFit(NoNewAttributesAfterInit):
 
         This is a chi-square statistic where the variance is computed
         from model amplitudes derived in the previous iteration of the
-        fit. This 'Iterative Weighting' ([1]_) attempts to remove
+        fit. This 'Iterative Weighting' ([Wheaton]_) attempts to remove
         biased estimates of model parameters which is inherent in
-        chi-square2 statistics ([2]_).
+        chi-square2 statistics ([Kearns]_).
 
-        The variance in bin i is estimated to be:
+        The variance in bin i is estimated to be::
 
-        sigma^2_i^j = S(i, t_s^(j-1)) + (A_s/A_b)^2 B_off(i, t_b^(j-1))
+          sigma^2_i^j = S(i, t_s^(j-1)) + (A_s/A_b)^2 B_off(i, t_b^(j-1))
 
         where j is the number of iterations that have been carried out
         in the fitting process, B_off is the background model
@@ -614,12 +612,12 @@ class IterFit(NoNewAttributesAfterInit):
         References
         ----------
 
-        .. [1] "Multiparameter linear least-squares fitting to Poisson
+        .. [Wheaton] "Multiparameter linear least-squares fitting to Poisson
                data one count at a time", Wheaton et al. 1995, ApJ 438,
                322
                http://adsabs.harvard.edu/abs/1995ApJ...438..322W
 
-        .. [2] "Bias-Free Parameter Estimation with Few Counts, by
+        .. [Kearns] "Bias-Free Parameter Estimation with Few Counts, by
                Iterative Chi-Squared Minimization", Kearns, Primini, &
                Alexander, 1995, ADASS IV, 331
                http://adsabs.harvard.edu/abs/1995ASPC...77..331K
@@ -711,9 +709,9 @@ class IterFit(NoNewAttributesAfterInit):
                  statkwargs=None):
         """Exclude points that are significately far away from the best fit.
 
-        The `sigmarej` scheme is based on the IRAF `sfit` function
-        [1]_, where after a fit data points are excluded if the value
-        of `(data-model)/error)` exceeds a threshold, and the data
+        The `sigmarej` scheme is based on the IRAF ``sfit`` function
+        [sfit]_, where after a fit data points are excluded if the value
+        of ``(data-model)/error)`` exceeds a threshold, and the data
         re-fit. This removal of data points continues until the fit
         has converged. The error removal can be asymmetric, since
         there are separate parameters for the lower and upper limits.
@@ -721,7 +719,7 @@ class IterFit(NoNewAttributesAfterInit):
         References
         ----------
 
-        .. [1] http://iraf.net/irafhelp.php?val=sfit
+        .. [sfit] http://iraf.net/irafhelp.php?val=sfit
 
         """
         if statkwargs is None:
@@ -1014,11 +1012,10 @@ class Fit(NoNewAttributesAfterInit):
 
         Returns
         -------
-        chisq : array or `None`
+        chisq : array or ``None``
            The chi-square value for each bin of the data, using the
-           current statistic (as set by `set_stat`).  A value of
-           `None` is returned if the statistic is not a chi-square
-           distribution.
+           current statistic. The return value is ``None`` if the
+           statistic is not a chi-square distribution.
 
         See Also
         --------
