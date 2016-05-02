@@ -392,7 +392,7 @@ class Chi2DataVar(Chi2):
     """Chi Squared with data variance.
 
     The variance in each bin is estimated from the data value in that
-    bin. See also `Chi2Gehrels`, `Chi2XSpecVar` and `Chi2ModVar`.
+    bin. See also `Chi2Gehrels`, `Chi2XSpecVar`, and `Chi2ModVar`.
 
     If the number of counts in each bin is large, then the shape of
     the Poisson distribution from which the counts are sampled tends
@@ -417,10 +417,10 @@ class Chi2ModVar(Chi2):
     """Chi Squared with model amplitude variance.
 
     The variance in each bin is estimated from the *model* value in
-    that bin. This contrasts with `Chi2DataVar`, Chi2XspecVar`,
-    and `Chi2Gehrels`, which use the data values. The variance is
+    that bin. This contrasts with `Chi2DataVar`, `Chi2XspecVar`,
+    and `Chi2Gehrels`, which use the data values. The variance is::
 
-    sigma(i)^2 = S(i) + [A(S)/A(B)]^2 B(i,off)
+      sigma(i)^2 = S(i) + [A(S)/A(B)]^2 B(i,off)
 
     where B(i,off) is the background model amplitude in bin i of the
     off-source region.
