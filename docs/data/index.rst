@@ -297,7 +297,7 @@ Reference/API
 
    There is no check that an attribute such as ``staterror``
    has the correct length when set.
-   
+
 sherpa.data Package
 -------------------
 

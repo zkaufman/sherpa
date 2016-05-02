@@ -8,19 +8,8 @@ the solution which minimises the chosen statistic.
 Reference/API
 -------------
 
-sherpa.optmethods Package
-+++++++++++++++++++++++++
+.. toctree::
 
-.. automodule:: sherpa.optmethods
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.optmethods.optfcts Package
-+++++++++++++++++++++++++++++++++
-
-.. automodule:: sherpa.optmethods.optfcts
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   api
+   extras
+   
