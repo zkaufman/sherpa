@@ -539,17 +539,28 @@ appear to have a problem with the `@savefig` IPython directive
     % conda create -n=sherpa-sphinx python=2.7 matplotlib astropy pep8 pyflakes 'ipython<4.1' sphinx numpydoc
     % source activate sherpa-sphinx
 
-    % python setup.py install
-    % cd docs
-    % make html
-
 Unfortunately, IPython 4.0.3 seems to have a problem at the end of the
 `make html` call - reporting
 
     sqlite3.OperationalError: attempt to write a readonly database
 
-but it does not seem to be a problem. The output can be viewed at
-`_build/html/index.html`.
+but it does not seem to be a problem.
+
+Using the build_sphinx target
+-----------------------------
+
+    % python setup.py build_sherpa
+
+The output can be viewed in `build/sphinx/html/index.html`.
+
+Manually creating the documentation
+-----------------------------------
+
+    % python setup.py install
+    % cd docs
+    % make html
+
+The output can be viewed at `_build/html/index.html`.
 
 History
 =======
