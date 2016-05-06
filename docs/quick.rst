@@ -600,6 +600,7 @@ and then displaying it:
     In [1]: def pimg(d, title):
        ...:     plt.imshow(d, origin='lower', interpolation='nearest',
        ...:                vmin=-1e4, vmax=5e4, cmap='viridis')
+       ...:     plt.axis('off')
        ...:     plt.colorbar(orientation='horizontal',
        ...:                  ticks=[0, 20000, 40000])
        ...:     plt.title(title)
