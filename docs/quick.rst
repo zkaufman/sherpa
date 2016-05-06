@@ -15,7 +15,7 @@ The following modules are assumed to have been imported:
 
     In [1]: import numpy as np
 
-    In [2]: import matplotlib.pyplot as plt
+    In [1]: import matplotlib.pyplot as plt
 
 The basic process, which will be followed below, is:
 
@@ -48,22 +48,22 @@ The following data - where ``x`` is the independent axis and
 
     In [1]: np.random.seed(0)
 
-    In [2]: x = np.linspace(-5., 5., 200)
+    In [1]: x = np.linspace(-5., 5., 200)
 
-    In [3]: ampl_true = 3
+    In [1]: ampl_true = 3
 
-    In [4]: pos_true = 1.3
+    In [1]: pos_true = 1.3
 
-    In [5]: sigma_true = 0.8
+    In [1]: sigma_true = 0.8
 
-    In [6]: err_true = 0.2
+    In [1]: err_true = 0.2
 
-    In [3]: y = ampl_true * np.exp(-0.5 * (x - pos_true)**2 / sigma_true**2)
+    In [1]: y = ampl_true * np.exp(-0.5 * (x - pos_true)**2 / sigma_true**2)
 
-    In [4]: y += np.random.normal(0., err_true, x.shape)
+    In [1]: y += np.random.normal(0., err_true, x.shape)
 
     @savefig data1d.png width=8in
-    In [5]: plt.plot(x, y, 'ko');
+    In [1]: plt.plot(x, y, 'ko');
 
 .. sherpa::
    :suppress:
@@ -81,9 +81,9 @@ data sets are loaded, but has no influence on the results):
 
     In [1]: from sherpa.data import Data1D
 
-    In [2]: d = Data1D('example', x, y)
+    In [1]: d = Data1D('example', x, y)
 
-    In [3]: print(d)
+    In [1]: print(d)
 
 At this point no errors are being used in the fit, so the ``staterror``
 and ``syserror`` fields are empty.
@@ -141,9 +141,9 @@ A full description of the model language and capabilities is provided in
 
     In [1]: from sherpa.models import Gauss1D
 
-    In [2]: g = Gauss1D()
+    In [1]: g = Gauss1D()
 
-    In [3]: print(g)
+    In [1]: print(g)
 
 It is also possible to
 :ref:`restrict the range of a parameter <params-limits>`,
@@ -177,9 +177,9 @@ Select the statistics
 
     In [1]: from sherpa.stats import LeastSq
 
-    In [2]: stat = LeastSq()
+    In [1]: stat = LeastSq()
 
-    In [3]: print(stat)
+    In [1]: print(stat)
 
 Select the optimisation routine
 -------------------------------
@@ -188,9 +188,9 @@ Select the optimisation routine
 
     In [1]: from sherpa.optmethods import LevMar
 
-    In [2]: opt = LevMar()
+    In [1]: opt = LevMar()
 
-    In [3]: print(opt)
+    In [1]: print(opt)
 
 Fit the data
 ------------
@@ -271,15 +271,15 @@ value used to create the data: :math:`\rm{FWHM} = 2 \sqrt{2ln(2)} \sigma`.
 
     In [1]: print(gres)
 
-    In [2]: conv = 2 * np.sqrt(2 * np.log(2))
+    In [1]: conv = 2 * np.sqrt(2 * np.log(2))
 
-    In [3]: ans = dict(zip(gres.parnames, gres.parvals))
+    In [1]: ans = dict(zip(gres.parnames, gres.parvals))
 
-    In [4]: print("Position ={:.2f}  truth={:.2f}".format(ans['gauss1d.pos'], pos_true))
+    In [1]: print("Position ={:.2f}  truth={:.2f}".format(ans['gauss1d.pos'], pos_true))
 
-    In [5]: print("Amplitude={:.2f}  truth={:.2f}".format(ans['gauss1d.ampl'], ampl_true))
+    In [1]: print("Amplitude={:.2f}  truth={:.2f}".format(ans['gauss1d.ampl'], ampl_true))
 
-    In [6]: print("Sigma    ={:.2f}  truth={:.2f}".format(ans['gauss1d.fwhm']/conv, sigma_true))
+    In [1]: print("Sigma    ={:.2f}  truth={:.2f}".format(ans['gauss1d.fwhm']/conv, sigma_true))
 
 The model, and its parameter values, can also be queried directly, as they
 have been changed by the fit:
@@ -288,7 +288,7 @@ have been changed by the fit:
 
     In [1]: print(g)
 
-    In [2]: print(g.pos)
+    In [1]: print(g.pos)
 
 Including errors
 ================
@@ -514,11 +514,11 @@ Fitting two-dimensional data
 
     In [1]: np.random.seed(0)
 
-    In [2]: y2, x2 = np.mgrid[:128, :128]
+    In [1]: y2, x2 = np.mgrid[:128, :128]
 
-    In [3]: z = 2. * x2 ** 2 - 0.5 * y2 ** 2 + 1.5 * x2 * y2 - 1.
+    In [1]: z = 2. * x2 ** 2 - 0.5 * y2 ** 2 + 1.5 * x2 * y2 - 1.
 
-    In [4]: z += np.random.normal(0., 0.1, z.shape) * 50000.
+    In [1]: z += np.random.normal(0., 0.1, z.shape) * 50000.
 
 Creating a data object
 ----------------------
@@ -530,11 +530,11 @@ one-dimensional coordinate arrays:
 
     In [1]: from sherpa.data import Data2D
 
-    In [2]: x0axis = x2.ravel()
+    In [1]: x0axis = x2.ravel()
 
-    In [2]: x1axis = y2.ravel()
+    In [1]: x1axis = y2.ravel()
 
-    In [2]: d2 = Data2D('img', x0axis, x1axis, z.ravel(), shape=(128,128))
+    In [1]: d2 = Data2D('img', x0axis, x1axis, z.ravel(), shape=(128,128))
 
 Define the model
 ----------------
@@ -545,9 +545,9 @@ Creating the model is the same as the one-dimensional case:
 
     In [1]: from sherpa.models import Polynom2D
 
-    In [2]: p2 = Polynom2D('p2')
+    In [1]: p2 = Polynom2D('p2')
 
-    In [3]: print(p2)
+    In [1]: print(p2)
 
 Control the parameters being fit
 --------------------------------
@@ -560,7 +560,7 @@ can be set:
     In [1]: for n in ['cx1', 'cy1', 'cx2y1', 'cx1y2', 'cx2y2']:
        ...:     getattr(p2, n).frozen = True
 
-    In [2]: print(p2)
+    In [1]: print(p2)
 
 Fit the data
 ------------
@@ -572,13 +572,13 @@ objects used earlier could have been re-used here):
 
     In [1]: f2 = Fit(d2, p2, stat=LeastSq(), method=LevMar())
 
-    In [2]: res2 = f2.fit()
+    In [1]: res2 = f2.fit()
 
-    In [3]: if not res2.succeeded: print(res2.message)
+    In [1]: if not res2.succeeded: print(res2.message)
 
-    In [4]: print(res2)
+    In [1]: print(res2)
 
-    In [5]: print(p2)
+    In [1]: print(p2)
 
 .. note::
 
@@ -602,20 +602,20 @@ and then displaying it:
        ...:                  ticks=[0, 20000, 40000])
        ...:     plt.title(title)
 
-    In [2]: plt.figure(figsize=(8, 3));
+    In [1]: plt.figure(figsize=(8, 3));
 
-    In [3]: plt.subplot(1, 3, 1);
+    In [1]: plt.subplot(1, 3, 1);
 
-    In [4]: pimg(z, "Data")
+    In [1]: pimg(z, "Data")
 
-    In [6]: plt.subplot(1, 3, 2);
+    In [1]: plt.subplot(1, 3, 2);
 
-    In [7]: pimg(m2, "Model")
+    In [1]: pimg(m2, "Model")
 
-    In [9]: plt.subplot(1, 3, 3);
+    In [1]: plt.subplot(1, 3, 3);
 
     @savefig data2d_residuals.png width=8in
-    In [10]: pimg(z - m2, "Residual")
+    In [1]: pimg(z - m2, "Residual")
 
 .. sherpa::
    :suppress:

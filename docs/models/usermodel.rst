@@ -124,19 +124,19 @@ And now repeating the 2D fit:
    
     In [1]: np.random.seed(0)
 
-    In [2]: y2, x2 = np.mgrid[:128, :128]
+    In [1]: y2, x2 = np.mgrid[:128, :128]
 
-    In [3]: z = 2. * x2 ** 2 - 0.5 * y2 ** 2 + 1.5 * x2 * y2 - 1.
+    In [1]: z = 2. * x2 ** 2 - 0.5 * y2 ** 2 + 1.5 * x2 * y2 - 1.
 
-    In [4]: z += np.random.normal(0., 0.1, z.shape) * 50000.
+    In [1]: z += np.random.normal(0., 0.1, z.shape) * 50000.
 
     In [1]: from sherpa.data import Data2D
 
-    In [2]: x0axis = x2.ravel()
+    In [1]: x0axis = x2.ravel()
 
-    In [2]: x1axis = y2.ravel()
+    In [1]: x1axis = y2.ravel()
 
-    In [2]: d2 = Data2D('img', x0axis, x1axis, z.ravel(), shape=(128,128))
+    In [1]: d2 = Data2D('img', x0axis, x1axis, z.ravel(), shape=(128,128))
 
     In [1]: from poly import WrapPoly2D
     
@@ -148,13 +148,13 @@ And now repeating the 2D fit:
 
     In [1]: f2 = Fit(d2, wp2, stat=LeastSq(), method=LevMar())
 
-    In [2]: res2 = f2.fit()
+    In [1]: res2 = f2.fit()
 
-    In [3]: if not res2.succeeded: print(res2.message)
+    In [1]: if not res2.succeeded: print(res2.message)
 
-    In [4]: print(res2)
+    In [1]: print(res2)
 
-    In [5]: print(wp2)
+    In [1]: print(wp2)
     
 .. note::
 

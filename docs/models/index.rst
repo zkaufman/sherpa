@@ -40,7 +40,7 @@ be set. In this case a one-dimensional gaussian:
 
    In [1]: g = models.Gauss1D()
 
-   In [2]: print(g)
+   In [1]: print(g)
 
 .. note::
 
@@ -70,7 +70,7 @@ of the class name.
 
    In [1]: h = models.Gauss1D('other')
 
-   In [2]: print(h)
+   In [1]: print(h)
 
    In [1]: h.name
 
@@ -184,7 +184,7 @@ and
 
    In [1]: print(h)
 
-   In [2]: print(h.fwhm)
+   In [1]: print(h.fwhm)
 
 These limits act to bound the acceptable parameter range; this
 is often because certain values are physically impossible, such
@@ -224,7 +224,7 @@ as shown below:
 
    In [1]: h.fwhm.frozen
 
-   In [2]: h.fwhm.frozen = True
+   In [1]: h.fwhm.frozen = True
 
 or via the :py:meth:`~sherpa.models.parameter.Parameter.freeze`
 and :py:meth:`~sherpa.models.parameter.Parameter.thaw`
@@ -234,7 +234,7 @@ methods for the parameter.
 
    In [1]: h.fwhm.thaw()
 
-   In [2]: h.fwhm.frozen
+   In [1]: h.fwhm.frozen
 
 There are times when a model parameter should *never* be varied
 during a fit. In this case the
@@ -309,7 +309,7 @@ such as adding a constant.
 
     In [1]: g1.pos = 1200
 
-    In [2]: g2.pos.val
+    In [1]: g2.pos.val
 
 The :py:class:`~sherpa.models.parameter.CompositeParameter` class
 controls how parameters are combined. In this case the result
