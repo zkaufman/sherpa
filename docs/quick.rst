@@ -395,6 +395,8 @@ the Sherpa logging interface.
    works okay even in this case (i.e. all the bounds are printed to
    stdout), but maybe something in the ipython directive is "causing fun".
 
+.. _quick_errors_intproj:
+
 A single parameter
 ------------------
 
@@ -622,18 +624,179 @@ and then displaying it:
 
    In [1]: plt.clf()
 
+   # Reset the figure size
+   In [1]: plt.figure()
 
 Simultaneous fits
 =================
 
-I'd like to fit src + background and background.
+Setting up the data:
 
 .. sherpa::
 
-   In [1]: print("Nothing to see here")
+   In [1]: from sherpa.models import Polynom1D
+
+   In [1]: from sherpa.astro.models import Lorentz1D
    
+   In [1]: tpoly = Polynom1D()
+
+   In [1]: tlor = Lorentz1D()
+
+   In [1]: tpoly.c0 = 50; tpoly.c1 = 1e-2
+
+   In [1]: tlor.pos = 4400; tlor.fwhm = 200; tlor.ampl = 1e4
+
+   In [1]: x1 = np.linspace(4200, 4600, 21)
+
+   In [1]: y1 = tlor(x1) + tpoly(x1) + np.random.normal(scale=5, size=x1.size)
+
+   In [1]: x2 = np.linspace(4100, 4900, 11)
+
+   In [1]: y2 = tpoly(x2) + np.random.normal(scale=5, size=x2.size)
+
+   In [1]: print("x1 size {}  x2 size {}".format(x1.size, x2.size))
+
+Probably want two views since they cover a similar range but have
+different gerating models (although this gives a view of the difference
+the lorentz component makes):
+
+.. sherpa::
+
+   In [1]: plt.plot(x1, y1);
+
+   @savefig quick_simulfit_data.png width=8in
+   In [1]: plt.plot(x2, y2);
+
 .. sherpa::
    :suppress:
 
    In [1]: plt.clf()
 
+Set up the fits:
+
+.. sherpa::
+
+   In [1]: d1 = Data1D('a', x1, y1)
+
+   In [1]: d2 = Data1D('b', x2, y2)
+
+   In [1]: fpoly, flor = Polynom1D(), Lorentz1D()
+
+   In [1]: fpoly.c1.thaw()
+
+   In [1]: flor.pos = 4500
+
+   # Guess the initial amplitude by matching to the data
+   In [1]: flor.ampl = y1.sum() / flor(x1).sum()
+
+   In [1]: from sherpa.optmethods import NelderMead
+
+   In [1]: stat, opt = LeastSq(), NelderMead()
+
+   # keep f1 and f2 for now; not sure which way will be done
+   In [1]: f1 = Fit(d1, fpoly + flor, stat, opt)
+
+   In [1]: f2 = Fit(d2, fpoly, stat, opt)
+
+   In [1]: from sherpa.data import DataSimulFit
+
+   In [1]: from sherpa.models import SimulFitModel
+
+   In [1]: sdata = DataSimulFit('all', (d1, d2))
+
+   In [1]: smodel = SimulFitModel('all', (fpoly + flor, fpoly))
+
+   In [1]: sfit = Fit(sdata, smodel, stat, opt)
+
+Note that there is a :py:meth:`~sherpa.fit.Fit.simulfit` method that
+can be used to fit using multiple :py:class:`sherpa.fit.Fit` objects,
+which wraps the above (using individual fit objects allows some
+of the data to be fit first, whcih may help reduce the parameter
+space needed to be searched):
+
+.. sherpa::
+
+   # An alternative would be `res = f1.simulfit(f2)`
+   In [1]: res = sfit.fit()
+
+   In [1]: print(res)
+
+Can see from the ``numpoints`` and ``dof`` fields that both
+data sets are being used here.
+
+The data can then be viewed (note explicit evaluation on a
+grid different to the data):
+
+.. sherpa::
+
+   In [1]: plt.plot(x1, y1, label='Data 1');
+
+   In [1]: plt.plot(x2, y2, label='Data 2');
+
+   In [1]: x = np.arange(4000, 5000, 10)
+
+   In [1]: plt.plot(x, (fpoly + flor)(x), linestyle='dotted', label='Fit 1');
+
+   In [1]: plt.plot(x, fpoly(x), linestyle='dotted', label='Fit 2');
+
+   @savefig quick_simulfit_fit.png width=8in
+   In [1]: plt.legend();
+
+May want to show the residual plot.
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+How do you do error analysis? Well, can call sfit.est_errors(), but
+that will fail with the current statistic (LeastSq), so need to
+change it. The error is 5, per bin, which has to be set up.
+
+.. sherpa::
+
+   In [1]: print(sfit.calc_stat_info())
+
+   In [1]: d1.staterror = np.ones(x1.size) * 5
+
+   In [1]: d2.staterror = np.ones(x2.size) * 5
+
+   In [1]: sfit.stat = Chi2()
+
+   In [1]: check = sfit.fit()
+
+   # How much did the fit change?
+   In [1]: check.dstatval
+
+Note that since the error on each bin is the same value, the best-fit
+value is not going to be different to the LeastSq result (so ``dstatval``
+should be 0).
+
+.. sherpa::
+
+   In [1]: print(sfit.calc_stat_info())
+
+   In [1]: sres = sfit.est_errors()
+
+   In [1]: print(sres)
+
+Error estimates on a single parameter are
+:ref:`as above <quick_errors_intproj>`.
+
+.. sherpa::
+
+   In [1]: iproj = IntervalProjection()
+
+   In [1]: iproj.prepare(min=6000, max=18000, nloop=101)
+
+   In [1]: iproj.calc(sfit, flor.ampl)
+
+   @savefig quick_simulfit_error.png width=8in
+   In [1]: iproj.plot()
+
+.. sherpa::
+   :suppress:
+
+   In [1]: plt.clf()
+
+Hmm, not particularly symmetric, but that's life.
