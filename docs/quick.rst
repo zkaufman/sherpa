@@ -658,7 +658,7 @@ Setting up the data:
    In [1]: print("x1 size {}  x2 size {}".format(x1.size, x2.size))
 
 Probably want two views since they cover a similar range but have
-different gerating models (although this gives a view of the difference
+different generating models (although this gives a view of the difference
 the lorentz component makes):
 
 .. sherpa::
