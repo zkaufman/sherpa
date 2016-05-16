@@ -549,7 +549,7 @@ but it does not seem to be a problem.
 Using the build_sphinx target
 -----------------------------
 
-    % python setup.py build_sherpa
+    % python setup.py build_sphinx
 
 The output can be viewed in `build/sphinx/html/index.html`.
 
