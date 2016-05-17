@@ -130,7 +130,8 @@ Define the model
 ----------------
 
 In this example a single model is used - a one-dimensional
-gaussian - but more complex examples are possible: these
+gaussian provided by the :py:class:`~sherpa.models.basic.Gauss1D`
+class - but more complex examples are possible: these
 include :ref:`multiple components <model-combine>`,
 sharing models between data sets, and
 :doc:`adding user-defined models <models/usermodel>`.
@@ -264,8 +265,9 @@ Extract the parameter values
 The fit results include a large number of attributes, many of which
 are not relevant here (as the fit was done with no error values).
 The following relation is used to convert from the full-width
-half-maximum value, used by the ``Gauss1D`` model, to the Gaussian sigma
-value used to create the data: :math:`\rm{FWHM} = 2 \sqrt{2ln(2)} \sigma`.
+half-maximum value, used by the :py:class:`~sherpa.models.basic.Gauss1D`
+model, to the Gaussian sigma value used to create the data:
+:math:`\rm{FWHM} = 2 \sqrt{2ln(2)} \sigma`.
 
 .. sherpa::
 
@@ -304,7 +306,8 @@ known:
 
     In [1]: print(de)
 
-The statistic is changed from least squares to chi-square:
+The statistic is changed from least squares to
+chi-square (:py:class:`~sherpa.stats.Chi2`):
 
 .. sherpa::
 
@@ -368,7 +371,8 @@ output from est_errors if multiple cores are used**.
    In [1]: print(errors.format())
 
 The :py:class:`~sherpa.fit.ErrorEstResults` instance returned by
-``est_errors`` contains the parameter values and limits:
+:py:meth:`~sherpa.fit.Fit.est_errors` contains the parameter
+values and limits:
 
 .. sherpa::
 
@@ -379,7 +383,7 @@ Screen output
 
 The default behavior - when *not* using the default 
 :py:class:`~sherpa.estmethods.Covariance` method - is for 
-`est_errors` to print out the parameter
+:py:meth:`~sherpa.fit.Fit.est_errors` to print out the parameter
 bounds as it finds them, which can be useful in an interactive session
 since the error analysis can be slow. This can be controlled using
 the Sherpa logging interface.
@@ -430,7 +434,8 @@ limit above the best-fit for a single parameter):
 
    In [1]: plt.clf()
 
-The curve is stored in the ``IntervalProjection`` object (in fact, these
+The curve is stored in the
+:py:class:`~sherpa.plot.IntervalProjection` object (in fact, these
 values are created by the call to
 :py:meth:`~sherpa.plot.IntervalProjection.calc` and so can be accesed without
 needing to create the plot):
@@ -541,7 +546,9 @@ one-dimensional coordinate arrays:
 Define the model
 ----------------
 
-Creating the model is the same as the one-dimensional case:
+Creating the model is the same as the one-dimensional case; in this
+case the :py:class:`~sherpa.models.basic.Polynom2D` class is used
+to create a low-order polynomial:
 
 .. sherpa::
 
@@ -631,7 +638,11 @@ and then displaying it:
 Simultaneous fits
 =================
 
-Setting up the data:
+Setting up the data (using a
+:py:class:`~sherpa.models.basic.Polynom1D`
+to model the background as a straight line and
+:py:class:`~sherpa.astro.models.Lorentz1D`
+for the signal):
 
 .. sherpa::
 
