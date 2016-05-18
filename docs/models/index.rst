@@ -392,6 +392,16 @@ Using `sherpa.models`
 Reference/API
 =============
 
+.. note::
+
+   I tried to manually separate the ``sherpa.models.basic``
+   models, to one-per-file, but this is manual work without
+   something like the ``automodapi`` from
+   <https://github.com/astropy/astropy-helpers>. There were
+   also issues with the 'See Also' links not working (perhaps
+   I needed to add a sphinx directive to each page to say
+   what the base module was).
+
 sherpa.models.basic Package
 ---------------------------
 
