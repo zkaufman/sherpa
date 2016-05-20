@@ -105,6 +105,7 @@ before_install:
     fi
   - if [ ${INSTALL_TYPE} == build_sphinx ];
      then conda install --yes 'ipython<4.1' sphinx numpydoc;
+     pip install astropy_helpers;
     fi
 
 install:
