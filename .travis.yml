@@ -104,7 +104,7 @@ before_install:
      then git submodule deinit -f .;
     fi
   - if [ ${INSTALL_TYPE} == build_sphinx ];
-     then conda install --yes 'ipython<4.1' sphinx numpydoc;
+     then conda install --yes 'ipython<4.1' sphinx graphviz;
      pip install astropy_helpers;
     fi
 
