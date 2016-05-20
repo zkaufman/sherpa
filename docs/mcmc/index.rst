@@ -291,35 +291,7 @@ This can be compared to the
 Reference/API
 =============
 
-sherpa.sim Package
-------------------
-
-.. automodule:: sherpa.sim
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.sim.simulate Package
----------------------------
-
-.. automodule:: sherpa.sim.simulate
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.sim.sample Package
--------------------------
-
-.. automodule:: sherpa.sim.sample
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.sim.mh Package
----------------------
-
-.. automodule:: sherpa.sim.mh
-    :members:
-    :undoc-members:
-    :show-inheritance:
-    
+.. automodapi:: sherpa.sim
+.. automodapi:: sherpa.sim.simulate
+.. automodapi:: sherpa.sim.sample
+.. automodapi:: sherpa.sim.mh

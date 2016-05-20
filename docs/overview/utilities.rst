@@ -10,48 +10,14 @@ Unfortunately it is not always obvious whether a routine is for use
 with the Object-Oriented API or the Session API.
 
 Reference/API
--------------
-
-sherpa.utils Package
-++++++++++++++++++++
-
-.. automodule:: sherpa.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.utils.err Package
-++++++++++++++++++++++++
-
-.. automodule:: sherpa.utils.err
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.utils.integration Package
-++++++++++++++++++++++++++++++++
-
-.. automodule:: sherpa.utils.integration
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.utils.logger Package
-+++++++++++++++++++++++++++
-
-#.. automodule:: sherpa.utils.logger
-#    :members:
-#    :undoc-members:
-#    :show-inheritance:
+=============
 
 .. note::
    There are problems importing ``sherpa.utils.logger``
-   
-sherpa.astro.utils Package
-++++++++++++++++++++++++++
 
-.. automodule:: sherpa.astro.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. automodapi:: sherpa.utils
+.. automodapi:: sherpa.utils.err
+.. automodapi:: sherpa.utils.integration
+# .. automodapi:: sherpa.utils.logger
+.. automodapi:: sherpa.astro.utils
 

@@ -272,7 +272,7 @@ is set to the link value (and is ``None`` for parameters that are
 not linked).
    
 Equality
-++++++++
+^^^^^^^^
 
 After the following, the two gaussian components have the same
 width:
@@ -298,7 +298,7 @@ When displaying the model, the value and link expression are included:
    In [1]: print(g2)
    
 Functional relationship
-+++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^
 
 The link can accept anything that evaluates to a value,
 such as adding a constant.
@@ -316,7 +316,7 @@ controls how parameters are combined. In this case the result
 is a :py:class:`~sherpa.models.parameter.BinaryOpParameter` object.
 
 Including another parameter
-+++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is possible to include other parameters in a link expression,
 which can lead to further constraints on the fit. For instance,
@@ -402,56 +402,19 @@ Reference/API
    I needed to add a sphinx directive to each page to say
    what the base module was).
 
-sherpa.models.basic Package
----------------------------
+.. automodapi:: sherpa.models.basic
+.. automodapi:: sherpa.models.model
+.. automodapi:: sherpa.models.parameter
+.. automodapi:: sherpa.models.template
+.. automodapi:: sherpa.astro.models
+.. automodapi:: sherpa.astro.optical
 
-.. automodule:: sherpa.models.basic
-    :members:
-    :undoc-members:
-    :show-inheritance:
+sherpa.astro.xspec Module
+-------------------------
 
-sherpa.models.model Package
----------------------------
-
-.. automodule:: sherpa.models.model
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.models.parameter Package
--------------------------------
-
-.. automodule:: sherpa.models.parameter
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.models.template Package
-------------------------------
-
-.. automodule:: sherpa.models.template
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.astro.models Package
----------------------------
-
-.. automodule:: sherpa.astro.models
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.astro.optical Package
-----------------------------
-
-.. automodule:: sherpa.astro.optical
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-sherpa.astro.xspec Package
---------------------------
-
-The models provided by the optional ``sherpa.astro.xspec``
-module are not discussed here.
+.. note::                
+    The models provided by the optional ``sherpa.astro.xspec``
+    module are not discussed here, as the build is currently
+    done without XSPEC. It's not yet clear to me how to
+    handle this (could mock out the XSPEC interface but
+    would also lie to run code).

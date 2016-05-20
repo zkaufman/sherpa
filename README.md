@@ -538,20 +538,37 @@ appear to have a problem with the `@savefig` IPython directive
 
     % conda create -n=sherpa-sphinx python=2.7 matplotlib astropy pep8 pyflakes 'ipython<4.1' sphinx numpydoc
     % source activate sherpa-sphinx
+    % pip install astropy-helpers
 
 Unfortunately, IPython 4.0.3 seems to have a problem at the end of the
-`make html` call - reporting
+`make html` call, reporting
 
     sqlite3.OperationalError: attempt to write a readonly database
 
-but it does not seem to be a problem.
+but it does not seem to be a problem. The larger problem is that
+I have been unable to get the api generation correct, in that the
+auto-generated docs are not placed in the correct location: they
+appear in the `api/` directory of the working directory, but
+this is not correct when the `build_sphinx` option is used,
+and even when `make html` is used there are still problems. I
+obviously haven't set something up somewhere, but whatever
+configuration variable it is (or approach or ...) eludes me.
+
+A symptom of this problem are messages about missing references
+or documents, such as
+
+    None:None: WARNING: toctree contains reference to nonexisting document u'api/sherpa.stats.WStat'
+
+It can also be seen when links to documentation do not work, although
+exactly what links do and don't work seem to depends on which of the
+following two approaches is used to build the documentation.
 
 Using the build_sphinx target
 -----------------------------
 
     % python setup.py build_sphinx
 
-The output can be viewed in `build/sphinx/html/index.html`.
+The output can be viewed in `docs/_build/html/index.html`.
 
 Manually creating the documentation
 -----------------------------------

@@ -21,24 +21,15 @@ with matplotlib.
 Reference/API
 =============
 
-sherpa.plot Package
--------------------
+.. note::
+   If the
+   `DS9 <http://ds9.si.edu/site/Home.html>`_ image viewer is installed,
+   image data can be viewed using the classes in the
+   ``sherpa.image`` module.
 
-.. automodule:: sherpa.plot
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. automodapi:: sherpa.plot
+.. automodapi:: sherpa.image
 
-sherpa.image Package
---------------------
 
-If the
-`DS9 <http://ds9.si.edu/site/Home.html>`_ image viewer is installed,
-image data can be viewed using the classes in this module.
-
-.. automodule:: sherpa.image
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 

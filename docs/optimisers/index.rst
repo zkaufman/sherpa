@@ -6,10 +6,7 @@ The optimiser varies the model parameters in an attempt to find
 the solution which minimises the chosen statistic.
 
 Reference/API
--------------
+=============
 
-.. toctree::
-
-   api
-   extras
-   
+.. automodapi:: sherpa.optmethods
+.. automodapi:: sherpa.optmethods.optfcts

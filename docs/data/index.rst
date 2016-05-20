@@ -59,7 +59,7 @@ This refers to the data being fit, and is referred to as ``y``.
 .. _data_unbinned:
    
 Unbinned data
-+++++++++++++
+^^^^^^^^^^^^^
 
 Unbinned data sets - defined by classes which do not end in
 the name ``Int`` - represent point values; that is, the the data
@@ -83,7 +83,7 @@ Examples of unbinned data classes are
 .. _data_binned:
    
 Binned data
-+++++++++++
+^^^^^^^^^^^
 
 Binned data sets represent values that are defined over a range,
 such as a histogram.
@@ -298,29 +298,10 @@ Reference/API
    There is no check that an attribute such as ``staterror``
    has the correct length when set.
 
-sherpa.data Package
--------------------
+.. note::
+   Do I need to add in autoclass statements for
+   sherpa.data.DataND, sherpa.data.BaseData
 
-.. automodule:: sherpa.data
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.. autoclass:: sherpa.data.DataND       
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-.. autoclass:: sherpa.data.BaseData       
-    :members:
-    :undoc-members:
-    :show-inheritance:
-       
-sherpa.astro.data Package
--------------------------
-
-.. automodule:: sherpa.astro.data
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. automodapi:: sherpa.data
+.. automodapi:: sherpa.astro.data
 
