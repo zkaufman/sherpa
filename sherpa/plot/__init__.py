@@ -1322,7 +1322,7 @@ class RatioPlot(ModelPlot):
 
 
 class RatioContour(ModelContour):
-    "Derived class for creating 2D ratio contours (data:model)"
+    "Derived class for creating 2D ratio contours (data / model)"
     contour_prefs = backend.get_ratio_contour_defaults()
 
     def _calc_ratio(self, ylist):
