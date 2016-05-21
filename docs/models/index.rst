@@ -403,11 +403,11 @@ Reference/API
    what the base module was).
 
 .. automodapi:: sherpa.models.basic
-.. automodapi:: sherpa.models.model
-.. automodapi:: sherpa.models.parameter
-.. automodapi:: sherpa.models.template
 .. automodapi:: sherpa.astro.models
 .. automodapi:: sherpa.astro.optical
+.. automodapi:: sherpa.models.template
+.. automodapi:: sherpa.models.model
+.. automodapi:: sherpa.models.parameter
 
 sherpa.astro.xspec Module
 -------------------------
