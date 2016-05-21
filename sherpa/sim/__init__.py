@@ -24,7 +24,7 @@ probability density of parameters in a fit to low-count data, for
 which Poisson statistics hold, using a Bayesian algorithm and a
 Monte-Carlo Markov Chain (MCMC). It was originally known as the
 pyBLoCXS (python Bayesian Low-Count X-ray Spectral) package
-[pyBLoCXS]_, but has since been incorporated into Sherpa.
+[1]_, but has since been incorporated into Sherpa.
 
 The Sherpa UI modules - e.g. `sherpa.ui` and `sherpa.astro.ui` - provide
 many of the routines described below (e.g. ``list_samplers``).
@@ -44,18 +44,18 @@ The algorithm explores parameter space at a suspected minimum -
 i.e. after a standard Sherpa fit. It supports a flexible definition of priors
 and allows for variations in the calibration information. It can be used to
 compute posterior predictive p-values for the likelihood ratio test
-[Protassov]_. Future versions will allow for the incorporation of calibration
-uncertainty [Lee]_.
+[2]_. Future versions will allow for the incorporation of calibration
+uncertainty [3]_.
 
 MCMC is a complex computational technique that requires some sophistication on
 the part of its users to ensure that it both converges and explores the
 posterior distribution properly. The pyBLoCXS code has been tested with a
 number of simple single-component spectral models. It should be used with
 great care in more complex settings. The code is based on the methods in
-[vanDyk]_ but employs a different MCMC sampler than is described in that article.
+[4]_ but employs a different MCMC sampler than is described in that article.
 A general description of the techniques employed along with their
-convergence diagnostics can be found in the Appendices of [vanDyk]_
-and in [Gelman]_.
+convergence diagnostics can be found in the Appendices of [4]_
+and in [5]_.
 
 Jumping Rules
 -------------
@@ -113,21 +113,21 @@ parameter chain.
 References
 ----------
 
-.. [pyBLoCXS] http://hea-www.harvard.edu/AstroStat/pyBLoCXS/
+.. [1] http://hea-www.harvard.edu/AstroStat/pyBLoCXS/
 
-.. [Protassov] "Statistics, Handle with Care: Detecting Multiple Model Components
+.. [2] "Statistics, Handle with Care: Detecting Multiple Model Components
        with the Likelihood Ratio Test", Protassov et al., 2002, ApJ, 571, 545
        http://adsabs.harvard.edu/abs/2002ApJ...571..545P
 
-.. [Lee] "Accounting for Calibration Uncertainties in X-ray Analysis:
+.. [3] "Accounting for Calibration Uncertainties in X-ray Analysis:
        Effective Areas in Spectral Fitting", Lee et al., 2011, ApJ, 731, 126
        http://adsabs.harvard.edu/abs/2011ApJ...731..126L
 
-.. [vanDyk] "Analysis of Energy Spectra with Low Photon Counts via Bayesian
+.. [4] "Analysis of Energy Spectra with Low Photon Counts via Bayesian
        Posterior Simulation", van Dyk et al. 2001, ApJ, 548, 224
        http://adsabs.harvard.edu/abs/2001ApJ...548..224V
 
-.. [Gelman] Chapter 11 of Gelman, Carlin, Stern, and Rubin
+.. [5] Chapter 11 of Gelman, Carlin, Stern, and Rubin
        (Bayesian Data Analysis, 2nd Edition, 2004, Chapman & Hall/CRC).
 
 Example

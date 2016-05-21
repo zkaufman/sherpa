@@ -588,9 +588,9 @@ class IterFit(NoNewAttributesAfterInit):
 
         This is a chi-square statistic where the variance is computed
         from model amplitudes derived in the previous iteration of the
-        fit. This 'Iterative Weighting' ([Wheaton]_) attempts to remove
+        fit. This 'Iterative Weighting' ([1]_) attempts to remove
         biased estimates of model parameters which is inherent in
-        chi-square2 statistics ([Kearns]_).
+        chi-square2 statistics ([2]_).
 
         The variance in bin i is estimated to be::
 
@@ -612,12 +612,12 @@ class IterFit(NoNewAttributesAfterInit):
         References
         ----------
 
-        .. [Wheaton] "Multiparameter linear least-squares fitting to Poisson
+        .. [1] "Multiparameter linear least-squares fitting to Poisson
                data one count at a time", Wheaton et al. 1995, ApJ 438,
                322
                http://adsabs.harvard.edu/abs/1995ApJ...438..322W
 
-        .. [Kearns] "Bias-Free Parameter Estimation with Few Counts, by
+        .. [2] "Bias-Free Parameter Estimation with Few Counts, by
                Iterative Chi-Squared Minimization", Kearns, Primini, &
                Alexander, 1995, ADASS IV, 331
                http://adsabs.harvard.edu/abs/1995ASPC...77..331K
@@ -710,7 +710,7 @@ class IterFit(NoNewAttributesAfterInit):
         """Exclude points that are significately far away from the best fit.
 
         The `sigmarej` scheme is based on the IRAF ``sfit`` function
-        [sfit]_, where after a fit data points are excluded if the value
+        [1]_, where after a fit data points are excluded if the value
         of ``(data-model)/error)`` exceeds a threshold, and the data
         re-fit. This removal of data points continues until the fit
         has converged. The error removal can be asymmetric, since
@@ -719,7 +719,7 @@ class IterFit(NoNewAttributesAfterInit):
         References
         ----------
 
-        .. [sfit] http://iraf.net/irafhelp.php?val=sfit
+        .. [1] http://iraf.net/irafhelp.php?val=sfit
 
         """
         if statkwargs is None:

@@ -1114,7 +1114,7 @@ static PyMethodDef UtilsFcts[] = {
   //neville
   { (char*) "neville",(PyCFunction)(neville<SherpaFloatArray, SherpaFloat>), METH_VARARGS, 
     (char*) "neville(xout, xin, yin)\n\n"
-            "Polynomial one-dimensional interpolation using Neville's method [Neville]_.\n"
+            "Polynomial one-dimensional interpolation using Neville's method [1]_.\n"
             PARAMETERSDOC
             "xout : array_like\n"
             "   The positions at which to interpolate.\n"
@@ -1130,7 +1130,7 @@ static PyMethodDef UtilsFcts[] = {
             SEEALSODOC
             "interpolate, linear_interp, nearest_interp\n"
             REFERENCESDOC "\n"
-            ".. [Neville] http://en.wikipedia.org/wiki/Neville%27s_algorithm\n"
+            ".. [1] http://en.wikipedia.org/wiki/Neville%27s_algorithm\n"
             EXAMPLESDOC "\n"
             ">>> x = [1.2, 3.4, 4.5, 5.2]\n"
             ">>> y = [12.2, 14.4, 16.8, 15.5]\n"
