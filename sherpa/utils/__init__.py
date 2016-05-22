@@ -1150,7 +1150,7 @@ def histogram1d(x, x_lo, x_hi):
 
 
 def histogram2d(x, y, x_grid, y_grid):
-    """Create 21D histogram from a binned grid (``x_grid``, ``y_grid``)
+    """Create 2D histogram from a binned grid (``x_grid``, ``y_grid``)
     and array of samples (``x``, and ``y``).
 
     See the `numpy.histogram2d` routine for a version with more options.
@@ -2435,9 +2435,11 @@ def transformed_quad_coef(x, f):
 
 def demuller(fcn, xa, xb, xc, fa=None, fb=None, fc=None, args=(),
              maxfev=32, tol=1.0e-6):
-    """A root-finding algorithm using Muller's method [1]_.
+    """A root-finding algorithm using Muller's method.
 
     p( x ) = f( xc ) + A ( x - xc ) + B ( x - xc ) ( x - xb )
+
+    See [1]_ for more information.
 
     Notes
     -----

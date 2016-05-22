@@ -1114,13 +1114,16 @@ static PyMethodDef UtilsFcts[] = {
   //neville
   { (char*) "neville",(PyCFunction)(neville<SherpaFloatArray, SherpaFloat>), METH_VARARGS, 
     (char*) "neville(xout, xin, yin)\n\n"
-            "Polynomial one-dimensional interpolation using Neville's method [1]_.\n"
+            "Polynomial one-dimensional interpolation using Neville's method.\n\n"
+            "The unique polynomial of the set of points is found using Neville's algorithm [1]_.\n"
+            "The polynomial is then used to interpolate onto the desired grid.\n"
             PARAMETERSDOC
             "xout : array_like\n"
             "   The positions at which to interpolate.\n"
             "xin : array_like\n"
             "   The x values of the data to be interpolated. This must be\n"
-            "   sorted so that it is monotonically increasing.\n"
+            "   sorted so that it is monotonically increasing and have no\n"
+            "   repeated values.\n"
             "yin : array_like\n"
             "   The y values of the data to interpolate (must be the same\n"
             "   size as ``xin``).\n"

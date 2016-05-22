@@ -247,7 +247,7 @@ class Delta1D(ArithmeticModel):
 
 
 class Erf(ArithmeticModel):
-    """One-dimensional error function [1]_.
+    """One-dimensional error function.
 
     Attributes
     ----------
@@ -264,7 +264,7 @@ class Erf(ArithmeticModel):
 
     Notes
     -----
-    The functional form of the model for points is::
+    The functional form of the model for points is ([1]_)::
 
         f(x) = ampl * erf((x - offset) / sigma)
 
@@ -298,7 +298,7 @@ class Erf(ArithmeticModel):
 
 
 class Erfc(ArithmeticModel):
-    """One-dimensional complementary error function [1]_.
+    """One-dimensional complementary error function.
 
     Attributes
     ----------
@@ -315,7 +315,7 @@ class Erfc(ArithmeticModel):
 
     Notes
     -----
-    The functional form of the model for points is::
+    The functional form of the model for points is ([1]_)::
 
         f(x) = ampl * erfc((x - offset) / sigma)
 
