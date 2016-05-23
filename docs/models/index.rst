@@ -385,6 +385,7 @@ Using `sherpa.models`
 
    integrate
    combine
+   convolution
    evaluation
    usermodel
    cache
