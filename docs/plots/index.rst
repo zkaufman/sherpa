@@ -22,6 +22,7 @@ Reference/API
 =============
 
 .. note::
+   
    If the
    `DS9 <http://ds9.si.edu/site/Home.html>`_ image viewer is installed,
    image data can be viewed using the classes in the

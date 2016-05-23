@@ -517,31 +517,45 @@ contours):
 Fitting two-dimensional data
 ============================
 
+Sherpa has support for two-dimensional data - that is data defined
+on the independent axes ``x0`` and ``x1``. In the example below a
+contiguous grid is used, that is the pixel size is constant, but
+there is no requirement that this is the case.
+
 .. sherpa::
 
     In [1]: np.random.seed(0)
 
-    In [1]: y2, x2 = np.mgrid[:128, :128]
+    In [1]: x1, x0 = np.mgrid[:128, :128]
 
-    In [1]: z = 2. * x2 ** 2 - 0.5 * y2 ** 2 + 1.5 * x2 * y2 - 1.
+    In [1]: y = 2 * x0**2 - 0.5 * x1**2 + 1.5 * x0 * x1 - 1
 
-    In [1]: z += np.random.normal(0., 0.1, z.shape) * 50000.
+    In [1]: y += np.random.normal(0, 0.1, y.shape) * 50000
 
+.. note::
+
+   Actually, the current :py:class:`~sherpa.data.Data2D` class
+   probably does force the data to be on a contiguous grid,
+   or at least have a constant pixel size, since it has a
+   ``shape`` argument.
+    
 Creating a data object
 ----------------------
 
 To support irregularly-gridded data, the ND data sets require
-one-dimensional coordinate arrays:
+that the coordinate arrays and data values are one-dimensional.
 
 .. sherpa::
 
     In [1]: from sherpa.data import Data2D
 
-    In [1]: x0axis = x2.ravel()
+    In [1]: x0axis = x0.ravel()
 
-    In [1]: x1axis = y2.ravel()
+    In [1]: x1axis = x1.ravel()
 
-    In [1]: d2 = Data2D('img', x0axis, x1axis, z.ravel(), shape=(128,128))
+    In [1]: yaxis = y.ravel()
+
+    In [1]: d2 = Data2D('img', x0axis, x1axis, yaxis, shape=(128,128))
 
 Define the model
 ----------------
@@ -592,7 +606,9 @@ objects used earlier could have been re-used here):
 .. note::
 
     TODO: why are all the parameters a good fit *except* for the
-    ``c`` value, which is -80 rather than -1?
+    ``c`` value, which is -80 rather than -1? It's probably just that
+    the constant value has a large error, since the noise term is
+    :math:`\pm 50000`.
 
 Display the model
 -----------------
@@ -616,7 +632,7 @@ and then displaying it:
 
     In [1]: plt.subplot(1, 3, 1);
 
-    In [1]: pimg(z, "Data")
+    In [1]: pimg(y, "Data")
 
     In [1]: plt.subplot(1, 3, 2);
 
@@ -625,7 +641,7 @@ and then displaying it:
     In [1]: plt.subplot(1, 3, 3);
 
     @savefig data2d_residuals.png width=8in
-    In [1]: pimg(z - m2, "Residual")
+    In [1]: pimg(y - m2, "Residual")
 
 .. sherpa::
    :suppress:
@@ -635,6 +651,14 @@ and then displaying it:
    # Reset the figure size
    In [1]: plt.figure()
 
+.. note::
+
+   The :py:mod:`sherpa.image` model provides support for *interactive*
+   image visualization, but this only works if the
+   `DS9 <http://ds9.si.edu/site/Home.html>`_ image viewer is installed.
+   For the examples in this document, matplotlib plots will be
+   created to view the data directly.
+   
 Simultaneous fits
 =================
 
