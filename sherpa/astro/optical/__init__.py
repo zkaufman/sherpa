@@ -27,6 +27,12 @@ a binned data set the lower-edge of each bin is used to evaluate
 the model. This module does not contain all the spectral
 components from SpecView ([2]_).
 
+Notes
+-----
+Although designed for optical data sets, where the independent axis
+is in Angstroms, some of the simpler models can be used with any wavelength
+unit, since they are defined using a relative value (e.g. x / refer).
+
 References
 ----------
 
