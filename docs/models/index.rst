@@ -5,9 +5,7 @@ Defining and using models
 The :mod:`sherpa.models` and :mod:`sherpa.astro.models`
 namespaces provides a collection of one- and 
 two-dimensional models as a convenience; the actual definition of
-each particular model depends on its type. The optional
-:mod:`sherpa.astro.xspec` module provides access to the set of
-XSPEC models (this will not be discussed further here).
+each particular model depends on its type.
 
 .. note::
    To get the link above probably means using
@@ -409,13 +407,13 @@ Reference/API
 .. automodapi:: sherpa.models.template
 .. automodapi:: sherpa.models.model
 .. automodapi:: sherpa.models.parameter
+                
+Optional Modules
+----------------
 
-sherpa.astro.xspec Module
--------------------------
+The ``sherpa.astro.xspec`` module is optional, since it depends
+on the presence of the `XSPEC model library <https://heasarc.gsfc.nasa.gov/xanadu/xspec/manual/Models.html>`_.
 
-.. note::                
-    The models provided by the optional ``sherpa.astro.xspec``
-    module are not discussed here, as the build is currently
-    done without XSPEC. It's not yet clear to me how to
-    handle this (could mock out the XSPEC interface but
-    would also lie to run code).
+.. automodapi:: sherpa.astro.xspec
+   :headings: ^"
+    

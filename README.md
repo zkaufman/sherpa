@@ -563,6 +563,12 @@ It can also be seen when links to documentation do not work, although
 exactly what links do and don't work seem to depends on which of the
 following two approaches is used to build the documentation.
 
+### Possible problems
+
+I have just tried including the `sherpa.astro.xspec` module documentation
+into the Sphinx documentation. I am not sure what happens to the build
+if you have not built against XSPEC and then try to build the documentation.
+
 Using the build_sphinx target
 -----------------------------
 
