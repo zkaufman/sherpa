@@ -23,10 +23,6 @@ matrix:
       - python: "3.5"
   fast_finish: true
   include:
-    # Experimental support for using Sphinx to build the documentation
-    # Placed first as it is likely to be slow
-    - env: XSPECVER="12.9.0i" FITS="astropy" INSTALL_TYPE=build_sphinx TEST=none MATPLOTLIBVER=1.5
-      python: "2.7"
     - env: XSPECVER="12.9.0i" FITS="astropy" INSTALL_TYPE=install TEST=smoke MATPLOTLIBVER=1.5
       python: "2.7"
       sudo: required
@@ -35,7 +31,8 @@ matrix:
       python: "2.7"
       sudo: required
       dist: trusty
-    - env: XSPECVER="12.9.0i" FITS="astropy" INSTALL_TYPE=develop TEST=submodule MATPLOTLIBVER=1.5 MKL=nomkl
+    # Experimental support for using Sphinx to build the documentation
+    - env: XSPECVER="12.9.0i" FITS="astropy" INSTALL_TYPE=develop TEST=submodule DOCS=true MATPLOTLIBVER=1.5 MKL=nomkl
       python: "2.7"
       sudo: required
       dist: trusty
@@ -103,7 +100,7 @@ before_install:
   - if [ ${TEST} == smoke ];
      then git submodule deinit -f .;
     fi
-  - if [ ${INSTALL_TYPE} == build_sphinx ];
+  - if [ ${DOCS} == true ];
      then conda install --yes 'ipython<4.1' sphinx graphviz;
      pip install astropy_helpers;
     fi
@@ -123,6 +120,9 @@ script:
   - if [ ${TEST} == package ];
         then cd $HOME;
         sherpa_test;
+    fi
+  - if [ ${DOCS} == true ];
+        then python setup.py build_sphinx;
     fi
 
 notifications:
