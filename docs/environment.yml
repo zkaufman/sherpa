@@ -1,0 +1,16 @@
+name: sherpa-sphinx
+
+channels:
+- conda-forge
+
+dependencies:
+- astropy
+- astropy-helpers
+- bison
+- ipython
+- numpy>=1.6.0
+- numpydoc
+- matplotlib
+- sphinx
+- sphinx-rtd-theme
+
