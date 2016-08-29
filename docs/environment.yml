@@ -1,5 +1,3 @@
-name: sherpa-sphinx
-
 channels:
 - conda-forge
 
