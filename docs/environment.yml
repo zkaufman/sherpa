@@ -1,5 +1,6 @@
 channels:
-- conda-forge
+- http://anaconda.org/conda-forge
+- defaults
 
 dependencies:
 - astropy
