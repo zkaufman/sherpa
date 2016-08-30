@@ -1,16 +1,16 @@
+name: sherpa
+
 channels:
-- http://anaconda.org/conda-forge
-- defaults
+  - https://conda.anaconda.org/conda-forge
+  - defaults
 
 dependencies:
-- astropy
-- bison
-- ipython
-- numpy>=1.6.0
-- numpydoc
-- matplotlib
-- sphinx
-
-pip:
-- astropy-helpers
-- sphinx-rtd-theme
+  - astropy
+  - bison
+  - ipython
+  - numpy>=1.6.0
+  - numpydoc
+  - matplotlib
+  - sphinx
+  - astropy-helpers
+  - sphinx-rtd-theme
