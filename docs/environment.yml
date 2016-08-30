@@ -12,5 +12,6 @@ dependencies:
   - numpydoc
   - matplotlib
   - sphinx
-  - astropy-helpers
-  - sphinx-rtd-theme
+  - pip:
+      - astropy-helpers
+      - sphinx-rtd-theme
