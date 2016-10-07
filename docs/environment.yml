@@ -5,13 +5,4 @@ channels:
   - defaults
 
 dependencies:
-  - astropy
   - bison
-  - ipython
-  - numpy>=1.6.0
-  - numpydoc
-  - matplotlib
-  - sphinx
-  - pip:
-      - astropy-helpers
-      - sphinx-rtd-theme
