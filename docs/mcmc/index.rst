@@ -216,7 +216,7 @@ PDF of a parameter
 CDF for a parameter
 -------------------
 
-Normalise by the actual answer to make it wasier to see how well
+Normalise by the actual answer to make it easier to see how well
 the results match reality:
 
 .. sherpa::

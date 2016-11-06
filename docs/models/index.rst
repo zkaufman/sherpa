@@ -40,14 +40,8 @@ be set. In this case a one-dimensional gaussian:
 
    In [1]: print(g)
 
-.. note::
-
-   At present there is no documentation provided for the model
-   classes, and the `CIAO Sherpa 
-   documentation <http://cxc.harvard.edu/sherpa/ahelp/models.html>`_,
-   or direct experimentation with the returned object, are needed
-   to find out what the parameters are. This will be fixed.
-
+   In [1]: help(g)
+   
 The parameter values have a current value, a valid range
 (as given by the the minimum and maximum columns in the table above),
 and a units field. The units field is a string, describing the
