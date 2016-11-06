@@ -536,12 +536,13 @@ There is an experimental version of the Sphinx docs available in the
 appear to have a problem with the `@savefig` IPython directive
 <https://github.com/ipython/ipython/issues/8733>.
 
-    % conda create -n=sherpa-sphinx python=2.7 matplotlib astropy pep8 pyflakes 'ipython<4.1' sphinx graphviz sphinx_rtd_theme
+    % conda create -n=sherpa-sphinx python matplotlib astropy pep8 pyflakes 'ipython<4.1' sphinx graphviz sphinx_rtd_theme
     % source activate sherpa-sphinx
     % pip install astropy_helpers
 
-The build also *requires* that the [XSPEC module](#xspec) is built;
-it is not yet clear how best to make this an optional dependency.
+It can be run with both Python 2.7 and Python 3.5. The build also *requires*
+that the [XSPEC module](#xspec) is built; it is not yet clear how best to
+make this an optional dependency.
 
 Unfortunately, IPython 4.0.3 seems to have a problem at the end of the
 `make html` call, reporting
