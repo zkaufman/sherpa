@@ -7,4 +7,5 @@ channels:
 dependencies:
   - bison
   - flex
+  - gcc
   - numpy
