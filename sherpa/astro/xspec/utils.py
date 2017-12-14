@@ -77,14 +77,17 @@ class include_if(object):
     def __call__(self, model_class):
         if not self.condition:
             model_class.version_enabled = False
-            model_class._calc = self._disabled(model_class.__name__)
+            model_class._calc = self._disabled(self.get_message(model_class))
 
         return model_class
 
+    def get_message(self, model_class):
+        return self.DISABLED_MODEL_MESSAGE.format(model_class.__name__)
+
     @staticmethod
-    def _disabled(cls_name):
+    def _disabled(message):
         def wrapped(*args, **kwargs):
-            raise AttributeError(include_if.DISABLED_MODEL_MESSAGE.format(cls_name))
+            raise AttributeError(message)
 
         return wrapped
 
@@ -94,6 +97,12 @@ class version_at_least(include_if):
     Decorator which takes a version string as an argument and enables a model only if
     the xspec version detected at runtime is equal or greater than the one provided to the decorator.
     """
+    DISABLED_MODEL_MESSAGE = "Model {} is disabled because XSPEC version >= {} is required"
+
     def __init__(self, version_string):
+        self.version_string = version_string
         xspec_version = LooseVersion(_xspec.get_xsversion())
         include_if.__init__(self, xspec_version >= LooseVersion(version_string))
+
+    def get_message(self, model_class):
+        return self.DISABLED_MODEL_MESSAGE.format(model_class.__name__, self.version_string)
