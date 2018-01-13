@@ -374,6 +374,69 @@ def test_arf_with_non_positive_thresh(ethresh):
     assert str(exc.value) == emsg
 
 
+@pytest.mark.parametrize("idx", [0, 1, 5, -2, -1])
+def test_arf_with_swapped_energy_bounds(idx):
+    """What happens if elo >= ehi?
+
+    The bin edges are swapped at position idx.
+    """
+
+    energy = np.arange(0.0, 1.0, 0.1, dtype=np.float32)
+    energ_lo = energy[:-1]
+    energ_hi = energy[1:]
+    specresp = energ_lo * 0 + 1.0
+
+    # test energ_hi < energ_lo
+    energ_lo[idx], energ_hi[idx] = energ_hi[idx], energ_lo[idx]
+    with pytest.raises(DataErr) as exc:
+        create_arf(energ_lo, energ_hi, specresp)
+
+    emsg = "The ARF 'test-arf' has at least one bin with ENERG_HI < ENERG_LO"
+    assert str(exc.value) == emsg
+
+    # test energ_hi == energ_lo
+    energ_lo[idx] = energ_hi[idx]
+    with pytest.raises(DataErr) as exc:
+        create_arf(energ_lo, energ_hi, specresp)
+
+    assert str(exc.value) == emsg
+
+
+@pytest.mark.parametrize("idx", [0, 1, 5, -3, -2])
+def test_arf_with_non_monotonic_grid(idx):
+    """What happens if the grid is not monotonic?"""
+
+    # For this test we want the ehi values to be larger than the
+    # corresponding elo values (otherwise a different condition)
+    # is triggered, but for energ_lo or energ_hi itself to
+    # be non-monotonic. A non-consecutive array is picked as
+    # this is a form not used much in these tests.
+    #
+    energ_lo = np.asarray([0.1, 0.4, 0.8, 1.0, 1.2, 2.0, 3.0, 4.1, 4.8, 5.2])
+    energ_hi = np.asarray([0.3, 0.7, 0.9, 1.1, 1.9, 2.1, 3.5, 4.6, 5.1, 5.4])
+    specresp = energ_lo * 0 + 1.0
+
+    idx1 = idx + 1
+    energ_lo[idx], energ_lo[idx1] = energ_lo[idx1], energ_lo[idx]
+    energ_hi[idx], energ_hi[idx1] = energ_hi[idx1], energ_hi[idx]
+
+    with pytest.raises(DataErr) as exc:
+        create_arf(energ_lo, energ_hi, specresp)
+
+    emsg = "The ARF 'test-arf' has a non-monotonic ENERG_LO array"
+    assert str(exc.value) == emsg
+
+    # now make the two consecutive bin edges be the same
+    #
+    energ_lo[idx] = energ_lo[idx1]
+    energ_hi[idx] = energ_hi[idx1]
+
+    with pytest.raises(DataErr) as exc:
+        create_arf(energ_lo, energ_hi, specresp)
+
+    assert str(exc.value) == emsg
+
+
 def test_arf_with_zero_energy_elem():
     """What happens creating an ARf with a zero-energy element.
 
@@ -393,7 +456,7 @@ def test_arf_with_zero_energy_elem():
 
 
 def test_arf_with_zero_energy_elem_replace():
-    """What happens creating an ARf with a zero-energy element.
+    """What happens creating an ARf with a zero-energy element?
 
     This is for the case where the first bin starts at E=0 keV.
     In this case the ARF is allowed to replace the 0 value.
@@ -421,6 +484,71 @@ def test_arf_with_zero_energy_elem_replace():
     assert adata.energ_lo[0] == pytest.approx(ethresh)
 
 
+def test_arf_with_grid_below_thresh():
+    """The first bin starts above 0 but ends below the threshold.
+
+    This is a valid grid (other than the fact it is not
+    consecutive), so the ARF can be created. See
+    test_arf_with_grid_below_thresh_zero() for the
+    case when the bin starts at 0.
+    """
+
+    energy = np.arange(0.0, 1.0, 0.1, dtype=np.float32)
+    energ_lo = energy[:-1]
+    energ_hi = energy[1:]
+
+    energ_lo[0] = 1e-7
+    energ_hi[0] = 2e-7
+
+    # The test is to make sure that the call does not
+    # error out
+    adata = create_arf(energ_lo, energ_hi, ethresh=1e-5)
+    assert isinstance(adata, DataARF)
+
+
+def test_arf_with_grid_below_thresh_zero():
+    """The first bin starts at 0 but ends below the threshold."""
+
+    energy = np.arange(0.0, 1.0, 0.1, dtype=np.float32)
+    energ_lo = energy[:-1]
+    energ_hi = energy[1:]
+
+    energ_lo[0] = 0.0
+    energ_hi[0] = 1e-7
+
+    with pytest.raises(DataErr) as exc:
+        create_arf(energ_lo, energ_hi, ethresh=1e-5)
+
+    emsg = "The ARF 'test-arf' has an ENERG_HI value <= " + \
+           "the replacement value of 1e-05"
+    assert str(exc.value) == emsg
+
+
+def test_arf_with_decreasing_energies():
+    """ENERG_LO < ENERG_HI for each row, but in decreasing order.
+
+    This does not appear to be a valid OGIP file: are there
+    examples in the real world that do this?
+    """
+
+    energy = np.arange(0.1, 1.0, 0.1, dtype=np.float32)
+    energ_lo = energy[:-1]
+    energ_hi = energy[1:]
+
+    # Reverse the arrays
+    energ_lo = energ_lo[::-1]
+    energ_hi = energ_hi[::-1]
+
+    # Programmer sanity check...
+    assert energ_lo[1] < energ_lo[0]
+    assert energ_hi[1] < energ_hi[0]
+
+    adata = create_arf(energ_lo, energ_hi)
+    assert isinstance(adata, DataARF)
+    assert np.all(adata.energ_lo == energ_lo)
+    assert np.all(adata.energ_hi == energ_hi)
+
+
 @pytest.mark.parametrize("ethresh", [0.0, -1e-10, -100])
 def test_rmf_with_non_positive_thresh(ethresh):
     """Check the error-handling works when ethresh <= 0"""
@@ -433,6 +561,67 @@ def test_rmf_with_non_positive_thresh(ethresh):
         create_delta_rmf(energ_lo, energ_hi, ethresh=ethresh)
 
     emsg = "ethresh is None or > 0"
+    assert str(exc.value) == emsg
+
+
+@pytest.mark.parametrize("idx", [0, 1, 5, -2, -1])
+def test_rmf_with_swapped_energy_bounds(idx):
+    """What happens if elo >= ehi?
+
+    The bin edges are swapped at position idx.
+    """
+
+    energy = np.arange(0.0, 1.0, 0.1, dtype=np.float32)
+    energ_lo = energy[:-1]
+    energ_hi = energy[1:]
+
+    # test energ_hi < energ_lo
+    energ_lo[idx], energ_hi[idx] = energ_hi[idx], energ_lo[idx]
+    with pytest.raises(DataErr) as exc:
+        create_delta_rmf(energ_lo, energ_hi)
+
+    emsg = "The RMF 'delta-rmf' has at least one bin with ENERG_HI < ENERG_LO"
+    assert str(exc.value) == emsg
+
+    # test energ_hi == energ_lo
+    energ_lo[idx] = energ_hi[idx]
+    with pytest.raises(DataErr) as exc:
+        create_delta_rmf(energ_lo, energ_hi)
+
+    assert str(exc.value) == emsg
+
+
+@pytest.mark.parametrize("idx", [0, 1, 5, -3, -2])
+def test_rmf_with_non_monotonic_grid(idx):
+    """What happens if the grid is not monotonic?"""
+
+    # For this test we want the ehi values to be larger than the
+    # corresponding elo values (otherwise a different condition)
+    # is triggered, but for energ_lo or energ_hi itself to
+    # be non-monotonic. A non-consecutive array is picked as
+    # this is a form not used much in these tests.
+    #
+    energ_lo = np.asarray([0.1, 0.4, 0.8, 1.0, 1.2, 2.0, 3.0, 4.1, 4.8, 5.2])
+    energ_hi = np.asarray([0.3, 0.7, 0.9, 1.1, 1.9, 2.1, 3.5, 4.6, 5.1, 5.4])
+
+    idx1 = idx + 1
+    energ_lo[idx], energ_lo[idx1] = energ_lo[idx1], energ_lo[idx]
+    energ_hi[idx], energ_hi[idx1] = energ_hi[idx1], energ_hi[idx]
+
+    with pytest.raises(DataErr) as exc:
+        create_delta_rmf(energ_lo, energ_hi)
+
+    emsg = "The RMF 'delta-rmf' has a non-monotonic ENERG_LO array"
+    assert str(exc.value) == emsg
+
+    # now make the two consecutive bin edges be the same
+    #
+    energ_lo[idx] = energ_lo[idx1]
+    energ_hi[idx] = energ_hi[idx1]
+
+    with pytest.raises(DataErr) as exc:
+        create_delta_rmf(energ_lo, energ_hi)
+
     assert str(exc.value) == emsg
 
 
@@ -565,4 +754,44 @@ def test_rmf_with_negative_energy_elem_replace():
         create_delta_rmf(energ_lo, energ_hi, ethresh=ethresh)
 
     emsg = "The RMF 'delta-rmf' has an ENERG_LO value < 0"
+    assert str(exc.value) == emsg
+
+
+def test_rmf_with_grid_below_thresh():
+    """The first bin starts above 0 but ends below the threshold.
+
+    This is a valid grid (other than the fact it is not
+    consecutive), so the RMF can be created. See
+    test_rmf_with_grid_below_thresh_zero() for the
+    case when the bin starts at 0.
+    """
+
+    energy = np.arange(0.0, 1.0, 0.1, dtype=np.float32)
+    energ_lo = energy[:-1]
+    energ_hi = energy[1:]
+
+    energ_lo[0] = 1e-7
+    energ_hi[0] = 2e-7
+
+    # The test is to make sure that the call does not
+    # error out
+    rdata = create_delta_rmf(energ_lo, energ_hi, ethresh=1e-5)
+    assert isinstance(rdata, DataRMF)
+
+
+def test_rmf_with_grid_below_thresh_zero():
+    """The first bin starts at 0 but ends below the threshold."""
+
+    energy = np.arange(0.0, 1.0, 0.1, dtype=np.float32)
+    energ_lo = energy[:-1]
+    energ_hi = energy[1:]
+
+    energ_lo[0] = 0.0
+    energ_hi[0] = 1e-7
+
+    with pytest.raises(DataErr) as exc:
+        create_delta_rmf(energ_lo, energ_hi, ethresh=1e-5)
+
+    emsg = "The RMF 'delta-rmf' has an ENERG_HI value <= " + \
+           "the replacement value of 1e-05"
     assert str(exc.value) == emsg
