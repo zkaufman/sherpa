@@ -46,6 +46,20 @@ except ImportError:
     has_xspec = False
 
 
+# In some instances, if some xvfb processes did not stop cleanly
+# pytest-xfvb starts complaining that a virtual screen is already on
+# the following code works around that. The issue is hard to reproduce
+# but I (OL) tested it locally as it reappeared on my workstation.
+try:
+    import random
+    from pyvirtualdisplay import abstractdisplay
+    abstractdisplay.RANDOMIZE_DISPLAY_NR = True
+    abstractdisplay.random = random
+    random.seed()
+except ImportError:
+    pass
+
+
 TEST_DATA_OPTION = "--test-data"
 
 
@@ -70,16 +84,20 @@ known_warnings = {
     UserWarning:
         [
             r"File '/data/regression_test/master/in/sherpa/aref_sample.fits' does not have write permission.  Changing to read-only mode.",
-            r"File '/data/regression_test/master/in/sherpa/aref_Cedge.fits' does not have write permission.  Changing to read-only mode."
+            r"File '/data/regression_test/master/in/sherpa/aref_Cedge.fits' does not have write permission.  Changing to read-only mode.",
+            r"Converting array .* to numpy array",
         ],
     RuntimeWarning:
         [r"invalid value encountered in sqrt",
          # See https://github.com/ContinuumIO/anaconda-issues/issues/6678
          r"numpy.dtype size changed, may indicate binary " +
-         r"incompatibility. Expected 96, got 88"
+         r"incompatibility. Expected 96, got 88",
+         # I am getting the following from astropy with at least python 2.7 during the conda tests
+         r"numpy.ufunc size changed, may indicate binary ",
          ],
      VisibleDeprecationWarning:
         [r"Passing `normed=True`*",
+         r"sctypeNA and typeNA will be removed.*",
         ],
 }
 
@@ -103,7 +121,9 @@ if sys.version_info >= (3, 2):
             [r"invalid value encountered in sqrt",
              # See https://github.com/ContinuumIO/anaconda-issues/issues/6678
              r"numpy.dtype size changed, may indicate binary " +
-             r"incompatibility. Expected 96, got 88"
+             r"incompatibility. Expected 96, got 88",
+             # See https://github.com/numpy/numpy/pull/432
+             r"numpy.ufunc size changed"
              ],
     }
     known_warnings.update(python3_warnings)
@@ -122,6 +142,18 @@ if have_astropy:
         ],
     }
     known_warnings.update(astropy_warnings)
+
+try:
+    from matplotlib import MatplotlibDeprecationWarning
+
+    matplotlib_warnings = {
+        MatplotlibDeprecationWarning:
+            [r'Passing the drawstyle with the linestyle as a single string is deprecated.*'
+             ]
+    }
+    known_warnings.update(matplotlib_warnings)
+except ImportError:
+    pass
 
 
 # Can this be replaced by the warning support added in pytest 3.1?
@@ -379,15 +411,16 @@ def clean_astro_ui():
 
     This also resets the XSPEC settings (if XSPEC support is provided).
 
+    See Also
+    --------
+    clean_ui
+
     Notes
     -----
     It does NOT change the logging level; perhaps it should, but the
     screen output is useful for debugging at this time.
     """
     from sherpa.astro import ui
-
-    # old_lgr_level = logger.getEffectiveLevel()
-    # logger.setLevel(logging.CRITICAL)
 
     if has_xspec:
         old_xspec = xspec.get_xsstate()
@@ -401,7 +434,26 @@ def clean_astro_ui():
     if old_xspec is not None:
         xspec.set_xsstate(old_xspec)
 
-    # logger.setLevel(old_lgr_level)
+
+@pytest.fixture
+def clean_ui():
+    """Ensure sherpa.ui.clean is called before AND after the test.
+
+    See Also
+    --------
+    clean_astro_ui
+
+    Notes
+    -----
+    It does NOT change the logging level; perhaps it should, but the
+    screen output is useful for debugging at this time.
+    """
+    from sherpa import ui
+
+    ui.clean()
+    yield
+
+    ui.clean()
 
 
 @pytest.fixture

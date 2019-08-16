@@ -341,7 +341,7 @@ class Session(NoNewAttributesAfterInit):
         self._projection_results = None
 
         self._pyblocxs = sherpa.sim.MCMC()
-
+        
         self._splitplot = sherpa.plot.SplitPlot()
         self._jointplot = sherpa.plot.JointPlot()
         self._dataplot = sherpa.plot.DataPlot()
@@ -8389,6 +8389,9 @@ class Session(NoNewAttributesAfterInit):
         >>> plot_pvalue(mdl1, mdl2, conv_model=rsp)
 
         """
+        if isinstance(self.get_data(id), sherpa.astro.data.DataPHA) and \
+           conv_model is None:
+            conv_model = self.get_response(id)
         if not sherpa.utils.bool_cast(replot) or self._pvalue_results is None:
             self._run_pvalue(null_model, alt_model, conv_model,
                              id, otherids, num, bins, numcores)
@@ -13812,8 +13815,9 @@ class Session(NoNewAttributesAfterInit):
             if otherids is None:
                 otherids = ()
             ids, fit = self._get_fit(id, otherids)
-            self._intproj.prepare(min, max, nloop, delv, fac,
-                                  sherpa.utils.bool_cast(log), numcores)
+            self._intproj.prepare(min=min, max=max, nloop=nloop, delv=delv,
+                                  fac=fac, log=sherpa.utils.bool_cast(log),
+                                  numcores=numcores)
             self._intproj.calc(fit, par, self._methods)
         return self._intproj
 
@@ -13917,8 +13921,9 @@ class Session(NoNewAttributesAfterInit):
             if otherids is None:
                 otherids = ()
             ids, fit = self._get_fit(id, otherids)
-            self._intunc.prepare(min, max, nloop, delv, fac,
-                                 sherpa.utils.bool_cast(log), numcores)
+            self._intunc.prepare(min=min, max=max, nloop=nloop, delv=delv,
+                                 fac=fac, log=sherpa.utils.bool_cast(log),
+                                 numcores=numcores)
             self._intunc.calc(fit, par)
         return self._intunc
 
